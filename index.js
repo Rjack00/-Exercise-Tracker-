@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors')
 require('dotenv').config()
 const mongoose = require('mongoose')
+const User = require('./models/user')
 
 app.use(cors())
 
@@ -10,7 +11,7 @@ app.use(cors())
 // Parse URL-encoded bodies (for form data)
 // This is essential for POST requests with form data
 // changes urlencoded data (username=john&description=running&duration=30) to js object
-app.use(express.urlencoded({ extended: false}))
+app.use(express.urlencoded({ extended: true}))
 
 app.use(express.json())
 
@@ -26,20 +27,28 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
-const exerciseSchema = new mongoose.Schema({
-  description: { type: String, required: true },
-  duration: { type: Number, required: true },
-  date: { type: Date, default: Date.now }
+
+
+app.post('/api/users', async (req, res) => {
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ error: 'Username is required' });
+  }
+
+  const user = new User({ username });
+
+  try {
+    const savedUser = await user.save();
+    res.json({ username: savedUser.username, _id: savedUser._id });
+  } catch (error) {
+    console.error('Save failed: ', error);
+    if (error.code === 11000) {
+      res.status(400).json({ error: 'Username already taken' });
+    }
+    res.status(500).json({ error: 'Server error' });
+  }
 });
-
-const userSchema = new mongoose.Schema({
-  userName: { type: String, required: true, unique: true },
-  log: [exerciseSchema]
-});
-
-module.exports = mongoose.model('User', userSchema);
-
-
 
 
 
