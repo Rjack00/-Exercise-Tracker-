@@ -43,10 +43,12 @@ app.post('/api/users', async (req, res) => {
     res.json({ username: savedUser.username, _id: savedUser._id });
   } catch (error) {
     console.error('Save failed: ', error);
+    
     if (error.code === 11000) {
-      res.status(400).json({ error: 'Username already taken' });
+      return res.status(400).json({ error: 'Username already taken' });
     }
-    res.status(500).json({ error: 'Server error' });
+
+    return res.status(500).json({ error: 'Server error' });
   }
 });
 
