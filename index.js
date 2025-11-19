@@ -21,14 +21,16 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
-
+let count = 0;
 
 app.get('/', (req, res) => {
+  console.log("Homepage hit: ", count++);
+
   res.sendFile(__dirname + '/views/index.html')
 });
 
 
-
+//=========== Create & Post users ================
 app.post('/api/users', async (req, res) => {
   const { username } = req.body;
 
@@ -52,6 +54,11 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
+//========= Get All users ================
+app.get('/api/users', async (req, res) => {
+  const users = await User.find({}).select('username _id');
+  
+})
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
