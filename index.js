@@ -8,9 +8,9 @@ const User = require('./models/user')
 app.use(cors())
 
 
-// Parse URL-encoded bodies (for form data)
-// This is essential for POST requests with form data
-// changes urlencoded data (username=john&description=running&duration=30) to js object
+//==== Parse URL-encoded bodies (for form data) ============
+//=== This is essential for POST requests with form data ===
+//== changes urlencoded data (username=john&description=running&duration=30) to js object ===
 app.use(express.urlencoded({ extended: true}))
 
 app.use(express.json())
@@ -27,6 +27,18 @@ app.get('/', (req, res) => {
   console.log("Homepage hit: ", count++);
 
   res.sendFile(__dirname + '/views/index.html')
+});
+
+// === Console logs to review request data ======
+app.use((req, res, next) => {
+  console.log({
+    path: req.path,
+    params: req.params,
+    query: req.query,
+    body: req.body,
+    headers: req.headers,
+  });
+  next();
 });
 
 
@@ -56,11 +68,21 @@ app.post('/api/users', async (req, res) => {
 
 //========= Get All users ================
 app.get('/api/users', async (req, res) => {
-  const users = await User.find({}).select('username _id');
+  const { username, _id } = req.body;
+
+  try {
+    const users = await User.find({}).select('username _id');
+    res.json(users);
+
+  } catch (error) {
+    console.error('Error: ', error);
+    return res.status(500).json({ error: 'Server error'});
+  }
   
-})
+  
+});
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
-})
+});
