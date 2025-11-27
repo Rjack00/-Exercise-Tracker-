@@ -4,6 +4,7 @@ const cors = require('cors')
 require('dotenv').config()
 const mongoose = require('mongoose')
 const User = require('./models/user')
+const user = require('./models/user')
 
 app.use(cors())
 
@@ -79,6 +80,11 @@ app.get('/api/users', async (req, res) => {
     return res.status(500).json({ error: 'Server error'});
   }
   
+  
+});
+
+//===== Add Exercise ===================
+app.post('/api/users/:_id/exercises', async (req, res) => {
   
 });
 
