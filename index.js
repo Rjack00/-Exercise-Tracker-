@@ -4,7 +4,6 @@ const cors = require('cors')
 require('dotenv').config()
 const mongoose = require('mongoose')
 const User = require('./models/user')
-const user = require('./models/user')
 
 app.use(cors())
 
@@ -83,12 +82,73 @@ app.get('/api/users', async (req, res) => {
   
 });
 
-//===== Add Exercise ===================
+//========= Add Exercise ================
 app.post('/api/users/:_id/exercises', async (req, res) => {
+  // 1. Extract data: _id, description, duration, date from URL or form using req.something
+  const { _id } = req.params;
+  const { description, duration, date } = req.body;
+
+  // 2. Validate required fields before DB calls
+  if(!description || !duration) {
+    return res.json({ error: "Description and Duration are both required" });
+  };
+
+  if(isNaN(duration) || duration <= 0) {
+    return res.json({ error: "Duration must be a positive number" });
+  }
+
+  // Trycatch
+  try {
+    // 3. Find the user by _id, if not found respond with an error message
+    const user = await User.findById(_id);
+    if(!user) {
+      return res.json({ error: "User not found" });
+    };
+
+    // 4. If date is supplied but it's invalid, reject it with a returned message error response
+    const dateStr = req.body.date?.trim();
+    let exerciseDate = new Date();
+
+    if(dateStr) {
+      exerciseDate = new Date(dateStr);
+      if(exerciseDate.toString() === "Invalid Date") {
+        return res.json({ error: "Invalid date format"})
+      }
+    }
+
+    // 5. Build the excercise object
+    const exercise = {
+      description: description.trim(),
+      duration: Number(duration),
+      date: exerciseDate.toString()
+    }
+
+    // 6. Add the exercise to the user's log array
+    user.log.push(exercise);
+
+    // 7. Save the updated user back to MongoDB (don't forget the await)
+    await user.save();
+
+    // 8. Send back the response freecodecamp expects
+    res.json({
+      _id: user._id,
+      username: user.username,
+      description: exercise.description,
+      duration: exercise.duration,
+      date: exercise.date
+    });
   
+  // 9. Catch with response  
+  } catch (error) {
+    console.error(error);
+    res.json({ error: "Server error"})
+  }
+
+
 });
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
 });
+
