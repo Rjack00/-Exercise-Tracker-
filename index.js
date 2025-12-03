@@ -149,8 +149,31 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
 
 // =========== Get a user's full log (GET /api/users/:_id/logs) ==============
 app.get('/api/users/:_id/logs', async (req, res) => {
+  // Find the user; if not found return json
+  try {
+    const user = await User.findById(req.params._id);
+    if(!user) return res.json({error: 'User not found'});
+    // 1. Make a copy of the log to avoid mutating the original
+    const log = [...user.log];
+
+    // 2. Handle ?to and ?from query parameters (yyyy-mm-dd)
+    const from = req.query.from ? new Date(req.query.from) : null;
+    const to = req.query.to ? new Date(req.query.to) : null;
+
+    // 3. Handle ?limit
+
+    // 4. Map the formatted log and convert date to string format
+
+    // 5. Final json response (user id, username, count of logs, log (formatted log))
+
+    // Catch
+  } catch (error) {
+    
+  }
+
   
-})
+  
+});
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
