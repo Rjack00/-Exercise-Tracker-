@@ -120,7 +120,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     const exercise = {
       description: description.trim(),
       duration: Number(duration),
-      date: exerciseDate.toString()
+      date: exerciseDate
     };
 
     // 6. Add the exercise to the user's log array
