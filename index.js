@@ -135,7 +135,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
       username: user.username,
       description: exercise.description,
       duration: exercise.duration,
-      date: exercise.date
+      date: exerciseDate.toDateString()
     });
   
   // 9. Catch with response  
