@@ -114,14 +114,14 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
       if(exerciseDate.toString() === "Invalid Date") {
         return res.json({ error: "Invalid date format"})
       }
-    }
+    };
 
     // 5. Build the excercise object
     const exercise = {
       description: description.trim(),
       duration: Number(duration),
       date: exerciseDate.toString()
-    }
+    };
 
     // 6. Add the exercise to the user's log array
     user.log.push(exercise);
@@ -142,7 +142,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.json({ error: "Server error"})
-  }
+  };
 
 
 });
@@ -159,19 +159,41 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     // 2. Handle ?to and ?from query parameters (yyyy-mm-dd)
     const from = req.query.from ? new Date(req.query.from) : null;
     const to = req.query.to ? new Date(req.query.to) : null;
+    if(from && from.toString() !== 'Invalid Date') {
+      log = log.filter(exercise => exercise.date >= from);
+    };
+
+    if(to && to.toString() !== 'Invalid Date') {
+      log = log.filter(exercise => exercise.date <= to);
+    };
 
     // 3. Handle ?limit
+    const limit = req.query.limit ? Number(req.query.limit) : null;
+    if(limit && !isNaN(limit)) {
+      log = log.slice(0, limit);
+    };
 
     // 4. Map the formatted log and convert date to string format
+    const formattedLog = log.map(ex => ({
+      description: ex.description,
+      duration: ex.duration,
+      date: ex.date.toDateString()
+    }));
 
     // 5. Final json response (user id, username, count of logs, log (formatted log))
+    res.json({
+      _id: user._id,
+      username: user.username,
+      count: formattedLog.length,
+      log: formattedLog
+    });
 
     // Catch
   } catch (error) {
+    console.log(error);
+    res.json({error: 'Server Error'});
     
-  }
-
-  
+  };
   
 });
 
