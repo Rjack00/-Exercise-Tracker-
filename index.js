@@ -68,7 +68,6 @@ app.post('/api/users', async (req, res) => {
 
 //========= Get All users ================
 app.get('/api/users', async (req, res) => {
-  const { username, _id } = req.body;
 
   try {
     const users = await User.find({}).select('username _id');
@@ -90,11 +89,11 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
 
   // 2. Validate required fields before DB calls
   if(!description || !duration) {
-    return res.json({ error: "Description and Duration are both required" });
+    return res.status(400).json({ error: "Description and Duration are both required" });
   };
 
   if(isNaN(duration) || duration <= 0) {
-    return res.json({ error: "Duration must be a positive number" });
+    return res.status(400).json({ error: "Duration must be a positive number" });
   }
 
   // Trycatch
@@ -102,7 +101,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     // 3. Find the user by _id, if not found respond with an error message
     const user = await User.findById(_id);
     if(!user) {
-      return res.json({ error: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     };
 
     // 4. If date is supplied but it's invalid, reject it with a returned message error response
@@ -112,7 +111,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     if(dateStr) {
       exerciseDate = new Date(dateStr);
       if(exerciseDate.toString() === "Invalid Date") {
-        return res.json({ error: "Invalid date format"})
+        return res.status(400).json({ error: "Invalid date format"})
       }
     };
 
@@ -141,7 +140,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
   // 9. Catch with response  
   } catch (error) {
     console.error(error);
-    res.json({ error: "Server error"})
+    res.status(500).json({ error: "Server error"})
   };
 
 
@@ -152,7 +151,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
   // Find the user; if not found return json
   try {
     const user = await User.findById(req.params._id);
-    if(!user) return res.json({error: 'User not found'});
+    if(!user) return res.status(404).json({error: 'User not found'});
     // 1. Make a copy of the log to avoid mutating the original
     const log = [...user.log];
 
@@ -191,7 +190,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     // Catch
   } catch (error) {
     console.log(error);
-    res.json({error: 'Server Error'});
+    res.status(500).json({error: 'Server Error'});
     
   };
   
