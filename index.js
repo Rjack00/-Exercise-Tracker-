@@ -153,7 +153,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     const user = await User.findById(req.params._id);
     if(!user) return res.status(404).json({error: 'User not found'});
     // 1. Make a copy of the log to avoid mutating the original
-    const log = [...user.log];
+    let log = [...user.log];
 
     // 2. Handle ?to and ?from query parameters (yyyy-mm-dd)
     const fromStr = req.query.from?.trim();
