@@ -156,19 +156,30 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     const log = [...user.log];
 
     // 2. Handle ?to and ?from query parameters (yyyy-mm-dd)
-    const from = req.query.from ? new Date(req.query.from) : null;
-    const to = req.query.to ? new Date(req.query.to) : null;
-    if(from && from.toString() !== 'Invalid Date') {
-      log = log.filter(exercise => exercise.date >= from);
-    };
+    const fromStr = req.query.from?.trim();
+      if(fromStr) {
+        const from = new Date(fromStr);
 
-    if(to && to.toString() !== 'Invalid Date') {
-      log = log.filter(exercise => exercise.date <= to);
-    };
+        if(from.toString() !== 'Invalid Date') {
+          log = log.filter(exercise => exercise.date >= from);
+        }
+        
+       
+      };
+
+    const toStr = req.query.to?.trim();
+      if(toStr) {
+        const to = new Date(toStr);
+
+        if(to.toString() !== 'Invalid Date') {
+          to.setUTCHours(23, 59, 59, 999);
+          log = log.filter(exercise => exercise.date <= to);
+        }
+      };
 
     // 3. Handle ?limit
     const limit = req.query.limit ? Number(req.query.limit) : null;
-    if(limit && !isNaN(limit)) {
+    if(limit && !isNaN(limit && limit > 0)) {
       log = log.slice(0, limit);
     };
 
