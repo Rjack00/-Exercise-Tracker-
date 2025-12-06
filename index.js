@@ -163,8 +163,6 @@ app.get('/api/users/:_id/logs', async (req, res) => {
         if(from.toString() !== 'Invalid Date') {
           log = log.filter(exercise => exercise.date >= from);
         }
-        
-       
       };
 
     const toStr = req.query.to?.trim();
