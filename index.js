@@ -21,11 +21,8 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
-let count = 0;
 
 app.get('/', (req, res) => {
-  console.log("Homepage hit: ", count++);
-
   res.sendFile(__dirname + '/views/index.html')
 });
 
