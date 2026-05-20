@@ -1,10 +1,10 @@
 {
-	"name": "fcc-exercise-tracker",
-	"version": "0.1.0",
-	"description": "A REST API project, part of Free Code Camp's curriculum",
-	"main": "index.js",
+	"name": "exercise-tracker",
+	"version": "1.0.0",
+	"description": "A REST API for tracking users and their workout exercises. Built with Node.js, Express, and MongoDB.",
+	"main": "server.js",
 	"scripts": {
-		"start": "node index.js",
+		"start": "node server.js",
 		"dev": "nodemon server.js"
 	},
 	"dependencies": {
@@ -13,9 +13,6 @@
 		"express": "^4.16.4",
 		"mongodb": "^7.0.0",
 		"mongoose": "^8.19.3"
-	},
-	"repository": {
-		"url": "https://github.com/freeCodeCamp/boilerplate-project-exercisetracker"
 	},
 	"license": "MIT",
 	"keywords": [
