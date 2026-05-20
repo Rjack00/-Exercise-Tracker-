@@ -93,7 +93,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     return res.status(400).json({ error: "Duration must be a positive number" });
   }
 
-  // Trycatch
+  // Try/catch
   try {
     // 3. Find the user by _id, if not found respond with an error message
     const user = await User.findById(_id);
@@ -112,7 +112,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
       }
     };
 
-    // 5. Build the excercise object
+    // 5. Build the exercise object
     const exercise = {
       description: description.trim(),
       duration: Number(duration),
