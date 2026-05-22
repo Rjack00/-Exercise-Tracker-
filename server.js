@@ -1,3 +1,6 @@
+// ──────────────────────────────────────────────────────────────
+// 1. CORE IMPORTS — Always present in every Express + Mongoose app
+// ──────────────────────────────────────────────────────────────
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -5,28 +8,40 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 const User = require('./models/user')
 
-app.use(cors())
+// ──────────────────────────────────────────────────────────────
+// 2. GLOBAL MIDDLEWARE — Almost always present
+// ──────────────────────────────────────────────────────────────
+app.use(cors())  // Enable CORS for all routes (required for browser-based tests)
 
-
-//==== Parse URL-encoded bodies (for form data) ============
-//=== This is essential for POST requests with form data ===
-//== changes urlencoded data (username=john&description=running&duration=30) to js object ===
+// ────────────────────────────────────────────
+// Parse URL-encoded bodies (for form data)
+// This is essential for POST requests with form data
+// changes urlencoded data (username=john&description=running&duration=30) to js object
 app.use(express.urlencoded({ extended: true}))
+// ────────────────────────────────────────────
 
-app.use(express.json())
+app.use(express.json())  // Parse JSON bodies → req.body
 
-app.use(express.static('public'))
+app.use(express.static('public'))  // Serve static files (index.html, CSS, JS)
 
-mongoose.connect(process.env.MONGO_URI)
+// ──────────────────────────────────────────────────────────────
+// 3. DATABASE CONNECTION — Standard in every Mongoose app
+// ──────────────────────────────────────────────────────────────
+mongoose.connect(process.env.MONGO_URI)  // Connect using URI from .env
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
-
+// ──────────────────────────────────────────────────────────────
+// 4. ROUTES
+// ──────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html')
+  res.sendFile(__dirname + '/views/index.html')  // Send the HTML form page
 });
 
-// === Console logs to review request data ======
+
+// ───── Console logs to review request data (optional debugging) ───────
+// (debugging middleware; runs on every request)
+
 app.use((req, res, next) => {
   console.log({
     path: req.path,
@@ -39,9 +54,10 @@ app.use((req, res, next) => {
 });
 
 
-//=========== Create & Post users ================
+// ──────────────────── Create & Post users ────────────────────
+
 app.post('/api/users', async (req, res) => {
-  const { username } = req.body;
+  const { username } = req.body;  // Form sends "username"
 
   if (!username) {
     return res.status(400).json({ error: 'Username is required' });
@@ -50,27 +66,29 @@ app.post('/api/users', async (req, res) => {
   const user = new User({ username });
 
   try {
-    const savedUser = await user.save();
+    const savedUser = await user.save();  // MongoDB generates _id automatically
     res.json({ username: savedUser.username, _id: savedUser._id });
   } catch (error) {
     console.error('Save failed: ', error);
     
-    if (error.code === 11000) {
-      return res.status(400).json({ error: 'Username already taken' });
+    if (error.code === 11000) {   // Duplicate key/value (username)
+      return res.status(400).json({ error: 'Username already taken' });  
     }
 
     return res.status(500).json({ error: 'Server error' });
   }
 });
 
-//========= Get All users ================
-app.get('/api/users', async (req, res) => {
+// ────────────────────── Get All users ──────────────────────
+
+app.get('/api/users', async (req, res) => {  
 
   try {
-    const users = await User.find({}).select('username _id');
-    res.json(users);
+    const users = await User.find({})   // Find all users
+                            .select('username _id');  // Only return these fields
+    res.json(users);     // Returns array of { username, _id }
 
-  } catch (error) {
+  } catch (error) { 
     console.error('Error: ', error);
     return res.status(500).json({ error: 'Server error'});
   }
@@ -78,10 +96,11 @@ app.get('/api/users', async (req, res) => {
   
 });
 
-//========= Add Exercise ================
+// ────────────────────── Add Exercise ──────────────────────
+
 app.post('/api/users/:_id/exercises', async (req, res) => {
   // 1. Extract data: _id, description, duration, date from URL or form using req.something
-  const { _id } = req.params;
+  const { _id } = req.params;  // User ID from URL
   const { description, duration, date } = req.body;
 
   // 2. Validate required fields before DB calls
@@ -125,7 +144,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     // 7. Save the updated user back to MongoDB (don't forget the await)
     await user.save();
 
-    // 8. Send back the response freecodecamp expects
+    // 8. Send back the response freeCodeCamp expects
     res.json({
       _id: user._id,
       username: user.username,
@@ -143,7 +162,8 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
 
 });
 
-// =========== Get a user's full log (GET /api/users/:_id/logs) ==============
+// ──────────── Get a user's full log (GET /api/users/:_id/logs) ────────────
+
 app.get('/api/users/:_id/logs', async (req, res) => {
   // Find the user; if not found return json
   try {
@@ -202,7 +222,9 @@ app.get('/api/users/:_id/logs', async (req, res) => {
   
 });
 
-
+// ──────────────────────────────────────────────────────────────
+// 5. START SERVER — Always present
+// ──────────────────────────────────────────────────────────────
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
 });
