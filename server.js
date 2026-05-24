@@ -99,11 +99,11 @@ app.get('/api/users', async (req, res) => {
 // ────────────────────── Add Exercise ──────────────────────
 
 app.post('/api/users/:_id/exercises', async (req, res) => {
-  // 1. Extract data: _id, description, duration, date from URL or form using req.something
+  // Extract data: _id, description, duration, date from URL or form using req.something
   const { _id } = req.params;  // User ID from URL
-  const { description, duration, date } = req.body;
+  const { description, duration, date } = req.body;  // Form fields
 
-  // 2. Validate required fields before DB calls
+  // Validate required fields before DB calls
   if(!description || !duration) {
     return res.status(400).json({ error: "Description and Duration are both required" });
   };
@@ -114,13 +114,13 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
 
   // Try/catch
   try {
-    // 3. Find the user by _id, if not found respond with an error message
+    // Find the user by _id, if not found respond with an error message
     const user = await User.findById(_id);
     if(!user) {
       return res.status(404).json({ error: "User not found" });
     };
 
-    // 4. If date is supplied but it's invalid, reject it with a returned message error response
+    // If date is supplied but it's invalid, reject it with a returned message error response
     const dateStr = req.body.date?.trim();
     let exerciseDate = new Date();
 
@@ -131,29 +131,29 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
       }
     };
 
-    // 5. Build the exercise object
+    // Build the exercise object (store real Date, not string)
     const exercise = {
       description: description.trim(),
       duration: Number(duration),
       date: exerciseDate
     };
 
-    // 6. Add the exercise to the user's log array
+    // Add the exercise to the user's log array
     user.log.push(exercise);
 
-    // 7. Save the updated user back to MongoDB (don't forget the await)
+    // Save the updated user back to MongoDB (don't forget the await)
     await user.save();
 
-    // 8. Send back the response freeCodeCamp expects
+    // Response: format date ONLY when sending
     res.json({
       _id: user._id,
       username: user.username,
       description: exercise.description,
       duration: exercise.duration,
-      date: exerciseDate.toDateString()
+      date: exerciseDate.toDateString()  // fCC requires this exact format
     });
   
-  // 9. Catch with response  
+  // Catch with response  
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error"})
@@ -169,10 +169,10 @@ app.get('/api/users/:_id/logs', async (req, res) => {
   try {
     const user = await User.findById(req.params._id);
     if(!user) return res.status(404).json({error: 'User not found'});
-    // 1. Make a copy of the log to avoid mutating the original
+    // Make a copy of the log to avoid mutating the original
     let log = [...user.log];
 
-    // 2. Handle ?to and ?from query parameters (yyyy-mm-dd)
+    // FROM filter - Handle ?to and ?from query parameters (yyyy-mm-dd)
     const fromStr = req.query.from?.trim();
       if(fromStr) {
         const from = new Date(fromStr);
@@ -182,30 +182,31 @@ app.get('/api/users/:_id/logs', async (req, res) => {
         }
       };
 
+    // TO filter — make it inclusive of the entire day
     const toStr = req.query.to?.trim();
       if(toStr) {
         const to = new Date(toStr);
 
         if(to.toString() !== 'Invalid Date') {
-          to.setUTCHours(23, 59, 59, 999);
+          to.setUTCHours(23, 59, 59, 999);  // End of day
           log = log.filter(exercise => exercise.date <= to);
         }
       };
 
-    // 3. Handle ?limit
+    // Handle ?limit
     const limit = req.query.limit ? Number(req.query.limit) : null;
     if(limit && !isNaN(limit && limit > 0)) {
       log = log.slice(0, limit);
     };
 
-    // 4. Map the formatted log and convert date to string format
+    // Map response output & format date (fCC wants strings)
     const formattedLog = log.map(ex => ({
       description: ex.description,
       duration: ex.duration,
       date: ex.date.toDateString()
     }));
 
-    // 5. Final json response (user id, username, count of logs, log (formatted log))
+    // Final json response (user id, username, count of logs, log (formatted log))
     res.json({
       _id: user._id,
       username: user.username,
@@ -213,7 +214,6 @@ app.get('/api/users/:_id/logs', async (req, res) => {
       log: formattedLog
     });
 
-    // Catch
   } catch (error) {
     console.log(error);
     res.status(500).json({error: 'Server Error'});
