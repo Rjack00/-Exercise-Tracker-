@@ -29,28 +29,13 @@ app.use(express.static('public'))  // Serve static files (index.html, CSS, JS)
 // ──────────────────────────────────────────────────────────────
 mongoose.connect(process.env.MONGO_URI)  // Connect using URI from .env
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+  .catch(err => console.error(err));
 
 // ──────────────────────────────────────────────────────────────
 // 4. ROUTES
 // ──────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')  // Send the HTML form page
-});
-
-
-// ───── Console logs to review request data (optional debugging) ───────
-// (debugging middleware; runs on every request)
-
-app.use((req, res, next) => {
-  console.log({
-    path: req.path,
-    params: req.params,
-    query: req.query,
-    body: req.body,
-    headers: req.headers,
-  });
-  next();
 });
 
 
@@ -195,7 +180,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
 
     // Handle ?limit
     const limit = req.query.limit ? Number(req.query.limit) : null;
-    if(limit && !isNaN(limit && limit > 0)) {
+    if(limit && !isNaN(limit) && limit > 0) {
       log = log.slice(0, limit);
     };
 
@@ -215,7 +200,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({error: 'Server Error'});
     
   };
