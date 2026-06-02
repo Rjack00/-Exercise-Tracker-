@@ -97,7 +97,6 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     return res.status(400).json({ error: "Duration must be a positive number" });
   }
 
-  // Try/catch
   try {
     // Find the user by _id, if not found respond with an error message
     const user = await User.findById(_id);
@@ -138,7 +137,6 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
       date: exerciseDate.toDateString()  // fCC requires this exact format
     });
   
-  // Catch with response  
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error"})
