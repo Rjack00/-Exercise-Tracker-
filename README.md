@@ -2,6 +2,8 @@
 
 A REST API that lets users create profiles and log workout exercises. Built as part of [freeCodeCamp's Back End Development certification](https://www.freecodecamp.org/learn/back-end-development-and-apis/).
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-View-00b4ff)](https://exercise-tracker-8ly3.onrender.com)
+
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)
@@ -46,14 +48,14 @@ A REST API that lets users create profiles and log workout exercises. Built as p
 **Log query params (all optional and can be used individually):**
 `from` (yyyy-mm-dd) · `to` (yyyy-mm-dd) · `limit` (number)
 
-**Example GET Call with query params:** 
-GET /api/users/:_id/logs?from=2024-01-01&to=2024-12-31&limit=5
+**Example GET route handler with query params:** 
+'/api/users/:_id/logs?from=2024-01-01&to=2024-12-31&limit=5'
 
 ## Run Locally
 
 1. Clone the repo and install dependencies:
 ```bash
-   git clone https://github.com/YOUR_USERNAME/exercise-tracker.git
+   git clone https://github.com/Rjack00/exercise-tracker.git
    cd exercise-tracker
    npm install
 ```
