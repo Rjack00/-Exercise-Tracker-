@@ -43,8 +43,11 @@ A REST API that lets users create profiles and log workout exercises. Built as p
   </tr>
 </table>
 
-**Log query params (all optional):**
+**Log query params (all optional and can be used individually):**
 `from` (yyyy-mm-dd) · `to` (yyyy-mm-dd) · `limit` (number)
+
+**Example GET Call with query params:** 
+GET /api/users/:_id/logs?from=2024-01-01&to=2024-12-31&limit=5
 
 ## Run Locally
 
