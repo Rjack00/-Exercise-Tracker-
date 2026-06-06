@@ -181,7 +181,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
 
     // Handle ?limit
     const limit = req.query.limit ? Number(req.query.limit) : null;
-    if(limit && !isNaN(limit) && limit > 0) {
+    if(limit !== null && !isNaN(limit) && limit > 0) {
       log = log.slice(0, limit);
     };
 
