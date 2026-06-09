@@ -32,7 +32,7 @@ app.use(express.static('public'))  // Serve static files (index.html, CSS, JS)
 // ──────────────────────────────────────────────────────────────
 mongoose.connect(process.env.MONGO_URI)  // Connect using URI from .env
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error(err));
+  .catch(err => console.error('Database connection failed: ', err));
 
 // ──────────────────────────────────────────────────────────────
 // 4. ROUTES
