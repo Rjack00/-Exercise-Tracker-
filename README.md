@@ -51,6 +51,32 @@ A REST API that lets users create profiles and log workout exercises. Built as p
 **Example GET route handler with query params:** 
 '/api/users/:_id/logs?from=2024-01-01&to=2024-12-31&limit=5'
 
+**Example API response (JSON):**
+```json
+{
+  "_id":"6a28ad33d81a81cb124860c0",
+  "username":"UserName",
+  "count":3,
+  "log":[
+    {
+      "description":"Running (HIIT)",
+      "duration":15,
+      "date":"Mon Jan 01 2024"
+    },
+    {
+      "description":"Walking (Zone 2)",
+      "duration":45,
+      "date":"Tue Jan 02 2024"
+    },
+    {
+      "description":"Bike (HIIT)",
+      "duration":15,
+      "date":"Thu Jan 04 2024"
+    }
+  ]
+}
+```
+
 ## Run Locally
 
 1. Clone the repo and install dependencies:
