@@ -30,9 +30,18 @@ app.use(express.static('public'))  // Serve static files (index.html, CSS, JS)
 // ──────────────────────────────────────────────────────────────
 // 3. DATABASE CONNECTION — Standard in every Mongoose app
 // ──────────────────────────────────────────────────────────────
+// Startup validation
+if(!process.env.MONGO_URI) {
+  console.error('MONGO_URI is missing in .env');
+  process.exit(1);
+}
+
 mongoose.connect(process.env.MONGO_URI)  // Connect using URI from .env
   .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('Database connection failed: ', err));
+  .catch(err => {
+    console.error('Database connection failed: ', err);
+    process.exit(1);
+  });
 
 // ──────────────────────────────────────────────────────────────
 // 4. ROUTES
@@ -112,7 +121,8 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     let exerciseDate = new Date();
 
     if(dateStr) {
-      exerciseDate = new Date(dateStr);
+      const [year, month, day] = dateStr.split('-').map(Number);
+      exerciseDate = new Date(year, month -1, day);
       if(exerciseDate.toString() === "Invalid Date") {
         return res.status(400).json({ error: "Invalid date format"})
       }
@@ -206,6 +216,12 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     
   };
   
+});
+
+
+// 404 middleware (Route not found)
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
 });
 
 // ──────────────────────────────────────────────────────────────
