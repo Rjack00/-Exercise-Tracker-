@@ -102,4 +102,13 @@ A REST API that lets users create profiles and log workout exercises. Built as p
 - **Runtime:** Node.js
 - **Framework:** Express
 - **Database:** MongoDB Atlas
-- **ODM:** Mongoose
+- **ODM (Object Document Mapper):** Mongoose
+
+## Testing
+
+API endpoints were tested using:
+
+- Postman
+- Browser forms
+- Direct browser GET requests
+- MongoDB Atlas document verification
