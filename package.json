@@ -17,7 +17,13 @@
 	"license": "MIT",
 	"keywords": [
 		"node",
-		"express"
+		"nodejs",
+		"express",
+		"mongodb",
+		"mongoose",
+		"rest-api",
+		"backend",
+		"exercise-tracker"
 	],
 	"devDependencies": {
 		"nodemon": "^3.1.10"
