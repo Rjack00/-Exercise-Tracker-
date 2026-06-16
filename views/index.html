@@ -11,7 +11,7 @@
   <body>
     <div class="container">
       <h1>Exercise Tracker</h1>
-      <form action="/api/users" method="post">
+      <form id="create-user-form" action="/api/users" method="post">
         <h2>Create a New User</h2>
         <p><code>POST /api/users</code></p>
         <input id="uname" type="text" name="username" placeholder="username" />
@@ -33,15 +33,6 @@
       <p><strong>[ ]</strong> = optional</p>
       <p><strong>from, to</strong> = dates (yyyy-mm-dd); <strong>limit</strong> = number</p>
     </div>
-    <script>
-      const exerciseForm = document.getElementById("exercise-form");
-
-      exerciseForm.addEventListener("submit", () => {
-        const userId = document.getElementById("uid").value;
-        exerciseForm.action = `/api/users/${userId}/exercises`;
-
-        exerciseForm.submit();
-      });
-    </script>
+    <script src="/app.js"></script>
   </body>
 </html>
