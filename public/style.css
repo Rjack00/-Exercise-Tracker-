@@ -68,3 +68,13 @@ code {
   color: #ff8800e0;
   padding: 2px;
 }
+
+#response-output {
+  min-height: 120px;
+  padding: 1rem;
+  border: 1px solid white;
+  border-radius: 8px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
