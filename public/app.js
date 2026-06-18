@@ -40,11 +40,39 @@ createUserForm.addEventListener('submit', async (event) => {
 });
 
 
-exerciseForm.addEventListener("submit", (event) => {
+exerciseForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const userId = document.getElementById("uid").value;
-    exerciseForm.action = `/api/users/${userId}/exercises`;
+    const description = document.getElementById('desc').value;
+    const duration = document.getElementById('dur').value;
+    const date = document.getElementById('date').value;
+    
+    try {
 
-    exerciseForm.submit();
+        const response = await fetch(`/api/users/${userId}/exercises`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                description,
+                duration,
+                date
+            })
+        });
+
+        const data = await response.json();
+        
+        if(!response.ok) {
+            throw new Error(data.error || 'Request failed');
+        }
+
+        responseOutput.textContent = JSON.stringify(data, null, 2);
+
+    } catch {
+        responseOutput.textContent = `Error: ${error.message}`;
+        
+    }
+    
 });
 
