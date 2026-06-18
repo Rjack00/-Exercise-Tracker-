@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: true}))
 
 app.use(express.json())  // Parse JSON bodies → req.body
 
-app.use(express.static('public'))  // Serve static files (index.html, CSS, JS)
+app.use(express.static('public'))  // Serve static files (files in listed folder, i.e. CSS, JS, etc.)
 
 // ──────────────────────────────────────────────────────────────
 // 3. DATABASE CONNECTION — Standard in every Mongoose app
