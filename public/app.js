@@ -1,7 +1,7 @@
 const responseOutput = document.getElementById('response-output');
 const createUserForm = document.getElementById('create-user-form');
-const exerciseForm = document.getElementById("exercise-form");
-
+const exerciseForm = document.getElementById('exercise-form');
+const logForm = document.getElementById('log-form');
 
 
 createUserForm.addEventListener('submit', async (event) => {
@@ -74,5 +74,33 @@ exerciseForm.addEventListener("submit", async (event) => {
         
     }
     
+});
+
+logForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const userId = document.getElementById('log-user-id').value;
+    const from = document.getElementById('log-from').value;
+    const to = document.getElementById('log-to').value;
+    const limit = document.getElementById('log-limit').value;
+
+    const params = new URLSearchParams();
+
+    if (from) params.append('from', from);
+    if (to) params.append('to', to);
+    if (limit) params.append('limit', limit);
+
+    const url = `/api/users/${userId}/logs?${params.toString()}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        console.log(data);
+        responseOutput.textContent = JSON.stringify(data, null, 2);
+
+    } catch (error) {
+        console.error(error)
+    }
 });
 
