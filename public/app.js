@@ -1,4 +1,5 @@
-const responseOutput = document.getElementById('response-output');
+const responseOutputJson = document.getElementById('response-output-json');
+const responseOutputUX = document.getElementById('response-output-ux');
 const createUserForm = document.getElementById('create-user-form');
 const exerciseForm = document.getElementById('exercise-form');
 const logForm = document.getElementById('log-form');
@@ -30,7 +31,7 @@ createUserForm.addEventListener('submit', async (event) => {
             throw new Error(data.error || 'Request failed');
         }
 
-        responseOutput.textContent = JSON.stringify(data, null, 2);
+        responseOutputJson.textContent = JSON.stringify(data, null, 2);
 
     } catch (error) {
         responseOutput.textContent = `Error: ${error.message}`;
@@ -67,7 +68,7 @@ exerciseForm.addEventListener("submit", async (event) => {
             throw new Error(data.error || 'Request failed');
         }
 
-        responseOutput.textContent = JSON.stringify(data, null, 2);
+        responseOutputJson.textContent = JSON.stringify(data, null, 2);
 
     } catch {
         responseOutput.textContent = `Error: ${error.message}`;
@@ -96,8 +97,22 @@ logForm.addEventListener('submit', async (e) => {
         const response = await fetch(url);
         const data = await response.json();
 
-        console.log(data);
-        responseOutput.textContent = JSON.stringify(data, null, 2);
+        responseOutputJson.textContent = JSON.stringify(data, null, 2);
+
+        responseOutputUX.innerHTML = `
+            <h3>${data.username}</h3>
+            <p>Total Exercises: ${data.count}</p>
+            `;
+
+        data.log.forEach(exercise => {
+            responseOutputUX.innerHTML += `
+            <div class="exercise-card">
+                <h4>${exercise.description}</h4>
+                <p>Duration: ${exercise.duration}</p>
+                <p>Date: ${exercise.date}</p>
+            </div>
+            `
+        });
 
     } catch (error) {
         console.error(error)

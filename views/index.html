@@ -26,14 +26,11 @@
         <input id="date" type="text" name="date" placeholder="date (yyyy-mm-dd)" />
         <input type="submit" value="Submit" />
       </form>
-      <p>
-        <strong>GET user's exercise log: </strong>
-        <code>GET /api/users/:_id/logs?[from][&amp;to][&amp;limit]</code>
-      </p>
-      <p><strong>[ ]</strong> = optional</p>
-      <p><strong>from, to</strong> = dates (yyyy-mm-dd); <strong>limit</strong> = number</p>
       <form id="log-form">
           <h2>View Exercise Log</h2>
+          <p><code>GET /api/users/:_id/logs?[from][&amp;to][&amp;limit]</code></p>
+          <p class="optional-get-queries"><strong>[ ]</strong> = optional</p>
+          <p class="optional-get-queries"><strong>from, to</strong> = dates (yyyy-mm-dd); <strong>limit</strong> = number</p>
           <input id="log-user-id" type="text" placeholder="User ID" required/>
           <input id="log-from" type="date"/>
           <input id="log-to" type="date"/>
@@ -42,8 +39,10 @@
       </form>
     </div>
     <div>
-      <h2>Response:</h2>
-      <pre id="response-output"></pre>
+      <h2>Response (JSON):</h2>
+      <pre id="response-output-json"></pre>
+      <h2>Response (UX):</h2>
+      <pre id="response-output-ux"></pre>
     </div>
     <script src="/app.js"></script>
   </body>
