@@ -12,6 +12,9 @@ body {
 }
 
 .container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
   text-align: center;
 }
 
@@ -64,12 +67,16 @@ input[type=submit]:hover {
 
 code {
   font-family: monospace;
-  font-size: 1.2em;
+  font-size: 0.9em;
   color: #ff8800e0;
   padding: 2px;
 }
 
-#response-output {
+.optional-get-queries {
+  font-size: 0.8em;
+}
+
+#response-output-json, #response-output-ux {
   /* min-height: 120px; */
   padding: 1rem;
   border: 1px solid white;
