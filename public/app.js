@@ -70,6 +70,16 @@ exerciseForm.addEventListener("submit", async (event) => {
 
         responseOutputJson.textContent = JSON.stringify(data, null, 2);
 
+        responseOutputUX.innerHTML = `
+        <div class="exercise-card">
+            <h3>Exercise Added</h3>
+            <p><strong>User:</strong> ${data.username}</p>
+            <p><strong>Exercise:</strong> ${data.description}</p>
+            <p><strong>Duration:</strong> ${data.duration} min</p>
+            <p><strong>Date:</strong> ${data.date}</p>
+        </div>
+        `;
+
     } catch {
         responseOutput.textContent = `Error: ${error.message}`;
         
@@ -100,8 +110,11 @@ logForm.addEventListener('submit', async (e) => {
         responseOutputJson.textContent = JSON.stringify(data, null, 2);
 
         responseOutputUX.innerHTML = `
+        <div class="ux-response-head">
             <h3>${data.username}</h3>
+            <p>ID: ${data._id}</p>
             <p>Total Exercises: ${data.count}</p>
+        </div>
             `;
 
         data.log.forEach(exercise => {
