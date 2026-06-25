@@ -3,13 +3,42 @@ const responseOutputUX = document.getElementById('response-output-ux');
 const createUserForm = document.getElementById('create-user-form');
 const exerciseForm = document.getElementById('exercise-form');
 const logForm = document.getElementById('log-form');
+const exerciseUserSelect = document.getElementById('exercise-user-select');
+const logUserSelect = document.getElementById('log-user-select');
 
+const loadUsers = async () => {
+    
+    try {
+        const response = await fetch('/api/users');
+        const users = await response.json();
+
+        for (let i = exerciseUserSelect.options.length - 1; i >= 1; i--) {
+            exerciseUserSelect.remove(i);
+            logUserSelect.remove(i);
+        }
+
+        users.forEach(user => {
+            const exerciseSelectOption = document.createElement('option');
+            exerciseSelectOption.value = user._id;
+            exerciseSelectOption.textContent = user.username;
+
+            const logSelectOption = document.createElement('option');
+            logSelectOption.value = user._id;
+            logSelectOption.textContent = user.username;
+
+            exerciseUserSelect.appendChild(exerciseSelectOption);
+            logUserSelect.appendChild(logSelectOption);
+        });
+
+    } catch (error) {
+        console.error('Failed to load users: ', error);
+    }
+}
 
 createUserForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     
     try {
-        console.log('Form intercepted');
     
         const username = document.getElementById('uname').value;
 
@@ -27,11 +56,20 @@ createUserForm.addEventListener('submit', async (event) => {
 
         const data = await response.json();
 
+        await loadUsers();
+
         if(!response.ok) {
             throw new Error(data.error || 'Request failed');
         }
 
         responseOutputJson.textContent = JSON.stringify(data, null, 2);
+
+        responseOutputUX.innerHTML = `
+        <div class="ux-response-head">
+            <p>New user "${data.username}" created successfully!</p>
+        </div>
+        `;
+
 
     } catch (error) {
         responseOutput.textContent = `Error: ${error.message}`;
@@ -43,7 +81,7 @@ createUserForm.addEventListener('submit', async (event) => {
 
 exerciseForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const userId = document.getElementById("uid").value;
+    const userId = exerciseUserSelect.value;
     const description = document.getElementById('desc').value;
     const duration = document.getElementById('dur').value;
     const date = document.getElementById('date').value;
@@ -90,7 +128,7 @@ exerciseForm.addEventListener("submit", async (event) => {
 logForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const userId = document.getElementById('log-user-id').value;
+    const userId = logUserSelect.value;
     const from = document.getElementById('log-from').value;
     const to = document.getElementById('log-to').value;
     const limit = document.getElementById('log-limit').value;
@@ -132,3 +170,4 @@ logForm.addEventListener('submit', async (e) => {
     }
 });
 
+loadUsers();
