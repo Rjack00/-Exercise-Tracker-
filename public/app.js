@@ -58,6 +58,9 @@ createUserForm.addEventListener('submit', async (event) => {
 
         await loadUsers();
 
+        exerciseUserSelect.value = data._id;
+        logUserSelect.value = data._id;
+
         if(!response.ok) {
             throw new Error(data.error || 'Request failed');
         }
@@ -72,7 +75,7 @@ createUserForm.addEventListener('submit', async (event) => {
 
 
     } catch (error) {
-        responseOutput.textContent = `Error: ${error.message}`;
+        responseOutputUX.textContent = `Error: ${error.message}`;
     }
     
 
@@ -81,11 +84,17 @@ createUserForm.addEventListener('submit', async (event) => {
 
 exerciseForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    if (!exerciseUserSelect.value) {
+        responseOutputUX.textContent = 'Please select a user.';
+        return;
+    }
+
     const userId = exerciseUserSelect.value;
     const description = document.getElementById('desc').value;
     const duration = document.getElementById('dur').value;
     const date = document.getElementById('date').value;
-    
+
     try {
 
         const response = await fetch(`/api/users/${userId}/exercises`, {
@@ -119,7 +128,7 @@ exerciseForm.addEventListener("submit", async (event) => {
         `;
 
     } catch {
-        responseOutput.textContent = `Error: ${error.message}`;
+        responseOutputUX.textContent = `Error: ${error.message}`;
         
     }
     
@@ -127,6 +136,11 @@ exerciseForm.addEventListener("submit", async (event) => {
 
 logForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    if (!logUserSelect.value) {
+        responseOutputUX.textContent = 'Please select a user.';
+        return;
+    }
 
     const userId = logUserSelect.value;
     const from = document.getElementById('log-from').value;
