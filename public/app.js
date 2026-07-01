@@ -127,7 +127,7 @@ exerciseForm.addEventListener("submit", async (event) => {
         </div>
         `;
 
-    } catch {
+    } catch (error) {
         responseOutputUX.textContent = `Error: ${error.message}`;
         
     }
