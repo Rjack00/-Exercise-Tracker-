@@ -40,6 +40,16 @@ const loadUsers = async () => {
     }
 }
 
+function showModal() {
+    modal.showModal();
+}
+
+modalTitle.textContent = "Test";
+modalContent.innerHTML = "<p>Hello World!</p>";
+modalJson.textContent = JSON.stringify({ test: true }, null, 2);
+
+showModal();
+
 createUserForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     
@@ -70,9 +80,9 @@ createUserForm.addEventListener('submit', async (event) => {
             throw new Error(data.error || 'Request failed');
         }
 
-        responseOutputJson.textContent = JSON.stringify(data, null, 2);
+        modalJson.textContent = JSON.stringify(data, null, 2);
 
-        responseOutputUX.innerHTML = `
+        modalContent.innerHTML = `
         <div class="ux-response-head">
             <p>New user "${data.username}" created successfully!</p>
         </div>
@@ -80,7 +90,7 @@ createUserForm.addEventListener('submit', async (event) => {
 
 
     } catch (error) {
-        responseOutputUX.textContent = `Error: ${error.message}`;
+        modalTitle.textContent = `Error: ${error.message}`;
     }
     
 
