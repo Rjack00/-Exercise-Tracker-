@@ -5,6 +5,11 @@ const exerciseForm = document.getElementById('exercise-form');
 const logForm = document.getElementById('log-form');
 const exerciseUserSelect = document.getElementById('exercise-user-select');
 const logUserSelect = document.getElementById('log-user-select');
+const modal = document.getElementById("response-modal");
+const modalTitle = document.getElementById("modal-title");
+const modalContent = document.getElementById("modal-content");
+const modalJson = document.getElementById("modal-json");
+const modalButtons = document.getElementById("modal-buttons");
 
 const loadUsers = async () => {
     
