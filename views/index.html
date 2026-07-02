@@ -44,12 +44,21 @@
         <input type="submit" value="View Log" />
       </form>
     </div>
-    <div>
+    <dialog id="response-modal">
+      <h2 id="modal-title"></h2>
+      <div id="modal-content"></div>
+      <details>
+        <summary>JSON Response</summary>
+        <pre id="modal-json"></pre>
+      </details>
+      <div class="modal-buttons"></div>
+    </dialog>
+    <!-- <div>
       <h2>Response (JSON):</h2>
       <pre id="response-output-json"></pre>
       <h2>Response (UX):</h2>
       <div id="response-output-ux"></div>
-    </div>
+    </div> -->
     <script src="/app.js"></script>
   </body>
 </html>
