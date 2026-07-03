@@ -85,6 +85,26 @@ code {
   font-size: 0.8em;
 }
 
+dialog {
+    border: none;
+    border-radius: 12px;
+}
+
+dialog::backdrop {
+    background: rgba(0,0,0,.6);
+}
+
+dialog[open] {
+    animation: fadeIn .2s;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+
 #response-output-json, #response-output-ux {
   /* min-height: 120px; */
   padding: 1rem;
