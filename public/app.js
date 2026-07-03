@@ -10,6 +10,20 @@ const modalTitle = document.getElementById("modal-title");
 const modalContent = document.getElementById("modal-content");
 const modalJson = document.getElementById("modal-json");
 const modalButtons = document.getElementById("modal-buttons");
+const closeBtn = document.getElementById('close-btn');
+
+function showModal(title, content, json = '') {
+    modalTitle.textContent = title;
+
+    modalContent.innerHTML = content;
+
+    modalJson.textContent = 
+        typeof json === 'string'
+            ? json
+            : JSON.stringify(json, null, 2);
+    
+    modal.showModal();
+};
 
 const loadUsers = async () => {
     
@@ -39,16 +53,20 @@ const loadUsers = async () => {
         console.error('Failed to load users: ', error);
     }
 }
+// ────────────────────── modal testing ──────────────────────
 
-function showModal() {
-    modal.showModal();
-}
+showModal(
+    "Test",
+    `
+    <p>Hello World!</p>
+    `,
+    { test: true }
+);
 
-modalTitle.textContent = "Test";
-modalContent.innerHTML = "<p>Hello World!</p>";
-modalJson.textContent = JSON.stringify({ test: true }, null, 2);
-
-showModal();
+closeBtn.addEventListener("click", () => {
+    modal.close();
+});
+// ─────────────────── end modal testing ──────────────────────
 
 createUserForm.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -80,14 +98,15 @@ createUserForm.addEventListener('submit', async (event) => {
             throw new Error(data.error || 'Request failed');
         }
 
-        modalJson.textContent = JSON.stringify(data, null, 2);
-
-        modalContent.innerHTML = `
-        <div class="ux-response-head">
-            <p>New user "${data.username}" created successfully!</p>
-        </div>
-        `;
-
+        showModal(
+            "User Created",
+            `
+            <div class="ux-response-head">
+                <p>New user "${data.username}" created successfully!</p>
+            </div>
+            `,
+            data
+        );
 
     } catch (error) {
         modalTitle.textContent = `Error: ${error.message}`;
