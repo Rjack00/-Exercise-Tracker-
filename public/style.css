@@ -40,7 +40,12 @@ form {
   width: 100%;
   max-width: 340px;
   border-radius: 15px;
-  border: 1px solid rgba(240, 92, 6, 0.986);
+  /* border: 1px solid rgba(2, 154, 255, 0.986); */
+  box-shadow: 0 0 9px rgb(247, 237, 149);
+}
+
+.user-dropdown {
+  margin-bottom: 10px;
 }
 
 input {
@@ -130,6 +135,7 @@ dialog[open] {
   margin: 10px 0;
   background-color: #2b2b2b;
   text-align: left;
+  color: rgb(238, 236, 236);
 }
 
 .exercise-card h4 {
