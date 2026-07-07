@@ -44,7 +44,15 @@ mongoose.connect(process.env.MONGO_URI)  // Connect using URI from .env
   });
 
 // ──────────────────────────────────────────────────────────────
-// 4. ROUTES
+// 4. HELPER FUNCTIONS
+// ──────────────────────────────────────────────────────────────
+const parseLocalDate = (dateStr) => {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month -1, day);
+}
+
+// ──────────────────────────────────────────────────────────────
+// 5. ROUTES
 // ──────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')  // Send the HTML form page
@@ -121,8 +129,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     let exerciseDate = new Date();
 
     if(dateStr) {
-      const [year, month, day] = dateStr.split('-').map(Number);
-      exerciseDate = new Date(year, month -1, day);
+      exerciseDate = parseLocalDate(dateStr);
       if(exerciseDate.toString() === "Invalid Date") {
         return res.status(400).json({ error: "Invalid date format"})
       }
@@ -171,7 +178,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     // FROM filter - Handle ?to and ?from query parameters (yyyy-mm-dd)
     const fromStr = req.query.from?.trim();
       if(fromStr) {
-        const from = new Date(fromStr);
+        const from = parseLocalDate(fromStr);
 
         if(from.toString() !== 'Invalid Date') {
           log = log.filter(exercise => exercise.date >= from);
@@ -181,10 +188,10 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     // TO filter — make it inclusive of the entire day
     const toStr = req.query.to?.trim();
       if(toStr) {
-        const to = new Date(toStr);
-
+        const to = parseLocalDate(toStr);
+        
         if(to.toString() !== 'Invalid Date') {
-          to.setUTCHours(23, 59, 59, 999);  // End of day
+          to.setHours(23, 59, 59, 999);  // End of day
           log = log.filter(exercise => exercise.date <= to);
         }
       };
@@ -201,6 +208,9 @@ app.get('/api/users/:_id/logs', async (req, res) => {
       duration: ex.duration,
       date: ex.date.toDateString()
     }));
+
+    
+    
 
     // Final json response (user id, username, count of logs, log (formatted log))
     res.json({
