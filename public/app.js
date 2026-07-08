@@ -23,6 +23,12 @@ function showModal(title, content, json = '') {
             : JSON.stringify(json, null, 2);
     
     modal.showModal();
+
+    return new Promise((resolve) => {
+        modal.addEventListener("close", () => {
+            resolve();
+        });
+    });
 };
 
 const loadUsers = async () => {
@@ -98,7 +104,7 @@ createUserForm.addEventListener('submit', async (event) => {
             throw new Error(data.error || 'Request failed');
         }
 
-        showModal(
+        await showModal(
             "User Created",
             `
             <div class="ux-response-head">
@@ -107,6 +113,8 @@ createUserForm.addEventListener('submit', async (event) => {
             `,
             data
         );
+
+        form.reset();
 
     } catch (error) {
         modalTitle.textContent = `Error: ${error.message}`;
@@ -229,13 +237,13 @@ logForm.addEventListener('submit', async (e) => {
             `
         });
 
-        showModal(
+        await showModal(
             "Exercises Logged",
             html,
             data
         );
 
-        
+        logForm.reset();
 
     } catch (error) {
         console.error(error)
