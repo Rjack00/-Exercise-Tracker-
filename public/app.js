@@ -9,6 +9,7 @@ const modal = document.getElementById("response-modal");
 const modalTitle = document.getElementById("modal-title");
 const modalContent = document.getElementById("modal-content");
 const modalJson = document.getElementById("modal-json");
+const modalJsonSection = document.querySelector("#response-modal details");
 const modalButtons = document.getElementById("modal-buttons");
 const closeBtn = document.getElementById('close-btn');
 
@@ -18,7 +19,8 @@ function showModal({
     json = '',
     buttons = [
         { text: "OK", value: "ok" }
-    ]
+    ],
+    showJson = true
 }) {
     modalTitle.textContent = title;
 
@@ -28,14 +30,28 @@ function showModal({
         typeof json === 'string'
             ? json
             : JSON.stringify(json, null, 2);
+
+    modalJsonSection.hidden = !showJson;
     
-    // modalButtons.innerHTML = '';
+    modalButtons.innerHTML = '';
+
+
+    buttons.forEach(buttonConfig => {
+        const btn = document.createElement("button");
+        btn.textContent = buttonConfig.text;
+
+        btn.addEventListener("click", (e) => {
+            modal.close(buttonConfig.value);
+        });
+
+        modalButtons.appendChild(btn);
+    });
     
     modal.showModal();
 
     return new Promise((resolve) => {
         modal.addEventListener("close", () => {
-            resolve();
+            resolve(modal.returnValue);
         }, { once: true });
     });
 };
@@ -69,12 +85,24 @@ const loadUsers = async () => {
     }
 }
 // ────────────────────── BUTTON LISTENERS ──────────────────────
+(async () => {
+    const result = await showModal({
+        title: "Confirmation",
+        content: "<p>Delete this exercise?</p>",
+        showJson: false,
+        buttons: [
+            { text: "Cancel", value: "cancel" },
+            { text: "Delete", value: "delete" }
+        ]
+    });
+
+    console.log(result);
+})();
 
 
-
-closeBtn.addEventListener("click", () => {
-    modal.close();
-});
+// closeBtn.addEventListener("click", () => {
+//     modal.close();
+// });
 // ─────────────────── end modal testing ──────────────────────
 
 createUserForm.addEventListener('submit', async (e) => {
@@ -107,7 +135,7 @@ createUserForm.addEventListener('submit', async (e) => {
             throw new Error(data.error || 'Request failed');
         }
 
-        await showModal({
+        const result = await showModal({
             title: "User Created",
             content: `
             <div class="ux-response-head">
@@ -116,6 +144,8 @@ createUserForm.addEventListener('submit', async (e) => {
             `,
             json: data
         });
+
+        console.log("result: ", result);
 
         e.target.reset();
 
@@ -172,9 +202,9 @@ exerciseForm.addEventListener("submit", async (e) => {
         // </div>
         // `;
 
-        await showModal(
-            "Exercise Added",
-            `
+        const result = await showModal({
+            title: "Exercise Added",
+            content: `
             <div class="exercise-card">
             <h3>Exercise Added</h3>
             <p><strong>User:</strong> ${data.username}</p>
@@ -183,8 +213,10 @@ exerciseForm.addEventListener("submit", async (e) => {
             <p><strong>Date:</strong> ${data.date}</p>
             </div>
             `,
-            data
-        );
+            json: data
+        });
+
+        console.log("result: ", result);
 
         e.target.reset();
 
@@ -242,11 +274,17 @@ logForm.addEventListener('submit', async (e) => {
             `
         });
 
-        await showModal(
-            "Exercises Logged",
-            html,
-            data
-        );
+        const result = await showModal({
+            title: "Exercises Logged",
+            content: html,
+            json: data,
+            buttons: [
+                { text: "Cancel", value: "cancel"},
+                { text: "Delete", value: "delete"}
+            ]
+        });
+
+        console.log("result: ", result);
 
         e.target.reset();
 
