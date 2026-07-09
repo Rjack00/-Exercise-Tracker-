@@ -12,7 +12,14 @@ const modalJson = document.getElementById("modal-json");
 const modalButtons = document.getElementById("modal-buttons");
 const closeBtn = document.getElementById('close-btn');
 
-function showModal(title, content, json = '') {
+function showModal({
+    title,
+    content,
+    json = '',
+    buttons = [
+        { text: "OK", value: "ok" }
+    ]
+}) {
     modalTitle.textContent = title;
 
     modalContent.innerHTML = content;
@@ -22,12 +29,14 @@ function showModal(title, content, json = '') {
             ? json
             : JSON.stringify(json, null, 2);
     
+    // modalButtons.innerHTML = '';
+    
     modal.showModal();
 
     return new Promise((resolve) => {
         modal.addEventListener("close", () => {
             resolve();
-        });
+        }, { once: true });
     });
 };
 
@@ -59,23 +68,17 @@ const loadUsers = async () => {
         console.error('Failed to load users: ', error);
     }
 }
-// ────────────────────── modal testing ──────────────────────
+// ────────────────────── BUTTON LISTENERS ──────────────────────
 
-showModal(
-    "Test",
-    `
-    <p>Hello World!</p>
-    `,
-    { test: true }
-);
+
 
 closeBtn.addEventListener("click", () => {
     modal.close();
 });
 // ─────────────────── end modal testing ──────────────────────
 
-createUserForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+createUserForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
     
     try {
     
@@ -104,17 +107,17 @@ createUserForm.addEventListener('submit', async (event) => {
             throw new Error(data.error || 'Request failed');
         }
 
-        await showModal(
-            "User Created",
-            `
+        await showModal({
+            title: "User Created",
+            content: `
             <div class="ux-response-head">
                 <p>New user "${data.username}" created successfully!</p>
             </div>
             `,
-            data
-        );
+            json: data
+        });
 
-        form.reset();
+        e.target.reset();
 
     } catch (error) {
         modalTitle.textContent = `Error: ${error.message}`;
@@ -124,8 +127,8 @@ createUserForm.addEventListener('submit', async (event) => {
 });
 
 
-exerciseForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
+exerciseForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
     if (!exerciseUserSelect.value) {
         responseOutputUX.textContent = 'Please select a user.';
@@ -169,7 +172,7 @@ exerciseForm.addEventListener("submit", async (event) => {
         // </div>
         // `;
 
-        showModal(
+        await showModal(
             "Exercise Added",
             `
             <div class="exercise-card">
@@ -182,6 +185,8 @@ exerciseForm.addEventListener("submit", async (event) => {
             `,
             data
         );
+
+        e.target.reset();
 
     } catch (error) {
         responseOutputUX.textContent = `Error: ${error.message}`;
@@ -243,7 +248,7 @@ logForm.addEventListener('submit', async (e) => {
             data
         );
 
-        logForm.reset();
+        e.target.reset();
 
     } catch (error) {
         console.error(error)
