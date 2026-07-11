@@ -56,6 +56,14 @@ function showModal({
     });
 };
 
+function showError(message) {
+    return showModal({
+        title: "Error",
+        content: message,
+        showJson: false
+    });
+};
+
 const loadUsers = async () => {
     
     try {
@@ -150,7 +158,7 @@ createUserForm.addEventListener('submit', async (e) => {
         e.target.reset();
 
     } catch (error) {
-        modalTitle.textContent = `Error: ${error.message}`;
+        await showError(error.message);
     }
     
 
@@ -161,7 +169,7 @@ exerciseForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     if (!exerciseUserSelect.value) {
-        responseOutputUX.textContent = 'Please select a user.';
+        await showError('Please select a user.');
         return;
     }
 
@@ -221,7 +229,7 @@ exerciseForm.addEventListener("submit", async (e) => {
         e.target.reset();
 
     } catch (error) {
-        responseOutputUX.textContent = `Error: ${error.message}`;
+        await showError(error.message);
         
     }
     
@@ -231,7 +239,7 @@ logForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     if (!logUserSelect.value) {
-        responseOutputUX.textContent = 'Please select a user.';
+        await showError("Please select a user.");
         return;
     }
 
