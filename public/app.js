@@ -13,6 +13,48 @@ const modalJsonSection = document.querySelector("#response-modal details");
 const modalButtons = document.getElementById("modal-buttons");
 const closeBtn = document.getElementById('close-btn');
 
+// ───────────────── HELPER FUNCTIONS ──────────────────────
+
+const exerciseAddedHTML = (data) => {
+    return `
+            <div class="exercise-card">
+            <h3>Exercise Added</h3>
+            <p><strong>User:</strong> ${data.username}</p>
+            <p><strong>Exercise:</strong> ${data.description}</p>
+            <p><strong>Duration:</strong> ${data.duration} min</p>
+            <p><strong>Date:</strong> ${data.date}</p>
+            </div>
+    `;
+}
+
+const exerciseCardHTML = (exercise) => {
+     
+     return `
+        <div class="exercise-card">
+            <h4>${exercise.description}</h4>
+            <p>Duration: ${exercise.duration}</p>
+            <p>Date: ${exercise.date}</p>
+        </div>
+        `;
+}
+
+const exerciseLogHTML = (data) => {
+    let html = `
+        <div class="ux-response-head">
+            <h3>${data.username}</h3>
+            <p>ID: ${data._id}</p>
+            <p>Total Exercises: ${data.count}</p>
+        </div>
+            `;
+    data.log.forEach(exercise => {
+        html += exerciseCardHTML(exercise);
+    });
+
+    return html;
+}
+
+
+
 function showModal({
     title,
     content,
@@ -212,15 +254,7 @@ exerciseForm.addEventListener("submit", async (e) => {
 
         const result = await showModal({
             title: "Exercise Added",
-            content: `
-            <div class="exercise-card">
-            <h3>Exercise Added</h3>
-            <p><strong>User:</strong> ${data.username}</p>
-            <p><strong>Exercise:</strong> ${data.description}</p>
-            <p><strong>Duration:</strong> ${data.duration} min</p>
-            <p><strong>Date:</strong> ${data.date}</p>
-            </div>
-            `,
+            content: exerciseAddedHTML(data),
             json: data
         });
 
@@ -264,27 +298,27 @@ logForm.addEventListener('submit', async (e) => {
 
         console.log('Data: ', data);
 
-        let html = `
-        <div class="ux-response-head">
-            <h3>${data.username}</h3>
-            <p>ID: ${data._id}</p>
-            <p>Total Exercises: ${data.count}</p>
-        </div>
-            `;
+        // let html = `
+        // <div class="ux-response-head">
+        //     <h3>${data.username}</h3>
+        //     <p>ID: ${data._id}</p>
+        //     <p>Total Exercises: ${data.count}</p>
+        // </div>
+        //     `;
 
-        data.log.forEach(exercise => {
-            html += `
-            <div class="exercise-card">
-                <h4>${exercise.description}</h4>
-                <p>Duration: ${exercise.duration}</p>
-                <p>Date: ${exercise.date}</p>
-            </div>
-            `
-        });
+        // data.log.forEach(exercise => {
+        //     html += `
+        //     <div class="exercise-card">
+        //         <h4>${exercise.description}</h4>
+        //         <p>Duration: ${exercise.duration}</p>
+        //         <p>Date: ${exercise.date}</p>
+        //     </div>
+        //     `
+        // });
 
         const result = await showModal({
             title: "Exercises Logged",
-            content: html,
+            content: exerciseLogHTML(data),
             json: data,
             buttons: [
                 { text: "Cancel", value: "cancel"},
