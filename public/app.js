@@ -34,6 +34,7 @@ const exerciseCardHTML = (exercise) => {
             <h4>${exercise.description}</h4>
             <p>Duration: ${exercise.duration}</p>
             <p>Date: ${exercise.date}</p>
+            <button class="delete-btn" data-id="${exercise._id}">Delete</button>
         </div>
         `;
 }
@@ -149,6 +150,13 @@ const loadUsers = async () => {
     console.log(result);
 })();
 
+modalContent.addEventListener("click", (e) => {
+        console.log("Delete button target: ", e.target);
+        if(e.target.classList.contains("delete-btn")) {
+            console.log("Delete button clicked!", e.target.dataset.id);
+            console.log("e.target.dataset.id: ", e.target.dataset.id);
+        }
+    });
 
 // closeBtn.addEventListener("click", () => {
 //     modal.close();
