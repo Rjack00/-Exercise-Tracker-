@@ -204,6 +204,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
 
     // Map response output & format date (fCC wants strings)
     const formattedLog = log.map(ex => ({
+      _id: ex._id,
       description: ex.description,
       duration: ex.duration,
       date: ex.date.toDateString()
