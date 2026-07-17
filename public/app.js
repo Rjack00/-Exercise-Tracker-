@@ -12,6 +12,7 @@ const modalJson = document.getElementById("modal-json");
 const modalJsonSection = document.querySelector("#response-modal details");
 const modalButtons = document.getElementById("modal-buttons");
 const closeBtn = document.getElementById('close-btn');
+let currentLog = [];
 
 // ───────────────── HELPER FUNCTIONS ──────────────────────
 
@@ -54,6 +55,18 @@ const exerciseLogHTML = (data) => {
     return html;
 }
 
+const confirmDeleteHTML = (exerciseLog) => {
+    return `
+    <div class="exercise-card">
+            <h4>${exerciseLog.description}</h4>
+            <p>Duration: ${exerciseLog.duration}</p>
+            <p>Date: ${exerciseLog.date}</p>
+            <button class="confirm-delete-btn" value="yesDelete">Yes</button>
+            <button class="cancel-delete-btn" value="cancel">Cancel</button>
+        </div>
+    `;
+} 
+
 
 
 function showModal({
@@ -77,7 +90,6 @@ function showModal({
     modalJsonSection.hidden = !showJson;
     
     modalButtons.innerHTML = '';
-
 
     buttons.forEach(buttonConfig => {
         const btn = document.createElement("button");
@@ -106,6 +118,7 @@ function showError(message) {
         showJson: false
     });
 };
+
 
 const loadUsers = async () => {
     
@@ -136,25 +149,26 @@ const loadUsers = async () => {
     }
 }
 // ────────────────────── BUTTON LISTENERS ──────────────────────
-(async () => {
-    const result = await showModal({
-        title: "Confirmation",
-        content: "<p>Delete this exercise?</p>",
-        showJson: false,
-        buttons: [
-            { text: "Cancel", value: "cancel" },
-            { text: "Delete", value: "delete" }
-        ]
-    });
 
-    console.log(result);
-})();
 
-modalContent.addEventListener("click", (e) => {
+modalContent.addEventListener("click", async (e) => {
         console.log("Delete button target: ", e.target);
+        
         if(e.target.classList.contains("delete-btn")) {
+
             console.log("Delete button clicked!", e.target.dataset.id);
-            console.log("e.target.dataset.id: ", e.target.dataset.id);
+            console.log("e.target.dataset: ", e.target.dataset);
+
+            const clickedID = e.target.dataset.id;
+
+            const exercise = currentLog.find(
+                ex => ex._id === clickedID
+            );
+            const result = await showModal({
+            title: "Are you sure you want to delete:",
+            content: confirmDeleteHTML(exercise),
+            showJson: false
+        });
         }
     });
 
@@ -305,6 +319,8 @@ logForm.addEventListener('submit', async (e) => {
         // responseOutputJson.textContent = JSON.stringify(data, null, 2);
 
         console.log('Data: ', data);
+
+        currentLog = data.log;
 
         // let html = `
         // <div class="ux-response-head">
