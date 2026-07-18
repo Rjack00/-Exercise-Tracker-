@@ -31,7 +31,7 @@ const exerciseAddedHTML = (data) => {
 const exerciseCardHTML = (exercise) => {
      
      return `
-        <div class="exercise-card">
+        <div class="exercise-card" data-id="${exercise._id}">
             <h4>${exercise.description}</h4>
             <p>Duration: ${exercise.duration}</p>
             <p>Date: ${exercise.date}</p>
@@ -55,15 +55,20 @@ const exerciseLogHTML = (data) => {
     return html;
 }
 
-const confirmDeleteHTML = (exerciseLog) => {
+const getExercise = (id) => {
+    return currentLog.find(ex => ex._id === id);
+}
+
+const deleteExerciseCardHTML = (exercise) => {
     return `
-    <div class="exercise-card">
-            <h4>${exerciseLog.description}</h4>
-            <p>Duration: ${exerciseLog.duration}</p>
-            <p>Date: ${exerciseLog.date}</p>
-            <button class="confirm-delete-btn" value="yesDelete">Yes</button>
-            <button class="cancel-delete-btn" value="cancel">Cancel</button>
-        </div>
+    <div class="exercise-card" data-id="${exercise._id}">
+        <h4>${exercise.description}</h4>
+        <p>Duration: ${exercise.duration}</p>
+        <p>Date: ${exercise.date}</p>
+        <p><strong>Delete this exercise?</strong></p>
+        <button class="cancel-delete-btn" value="cancel">Cancel</button>
+        <button class="confirm-delete-btn" value="yesDelete">Yes</button>
+    </div>
     `;
 } 
 
@@ -161,14 +166,33 @@ modalContent.addEventListener("click", async (e) => {
 
             const clickedID = e.target.dataset.id;
 
-            const exercise = currentLog.find(
-                ex => ex._id === clickedID
-            );
-            const result = await showModal({
-            title: "Are you sure you want to delete:",
-            content: confirmDeleteHTML(exercise),
-            showJson: false
-        });
+            const exercise = getExercise(clickedID);
+
+            const card = e.target.closest(".exercise-card");
+            card.innerHTML = deleteExerciseCardHTML(exercise);
+            return;
+        }
+
+        if(e.target.classList.contains("confirm-delete-btn")) {
+            console.log("Delete-confirmation: ", e.target);
+
+            const clickedID = e.target.dataset.id;
+            const exercise = getExercise(clickedID);
+            const card = e.target.closest(".exercise-card");
+
+            card.innerHTML = exerciseCardHTML(exercise);
+            return;
+        }
+
+        if(e.target.classList.contains("cancel-delete-btn")) {
+            console.log("Cancel Delete: ", e.target);
+
+            const clickedID = e.target.dataset.id;
+            const exercise = getExercise(clickedID);
+            const card = e.target.closest(".exercise-card");
+
+            card.innerHTML = exerciseCardHTML(exercise);
+            return;
         }
     });
 
