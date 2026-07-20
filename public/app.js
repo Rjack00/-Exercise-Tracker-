@@ -18,13 +18,13 @@ let currentLog = [];
 
 const exerciseAddedHTML = (data) => {
     return `
-            <div class="exercise-card">
+        <div class="exercise-card">
             <h3>Exercise Added</h3>
             <p><strong>User:</strong> ${data.username}</p>
             <p><strong>Exercise:</strong> ${data.description}</p>
             <p><strong>Duration:</strong> ${data.duration} min</p>
             <p><strong>Date:</strong> ${data.date}</p>
-            </div>
+        </div>
     `;
 }
 
@@ -61,16 +61,23 @@ const getExercise = (id) => {
 
 const deleteExerciseCardHTML = (exercise) => {
     return `
-    <div class="exercise-card" data-id="${exercise._id}">
         <h4>${exercise.description}</h4>
         <p>Duration: ${exercise.duration}</p>
         <p>Date: ${exercise.date}</p>
         <p><strong>Delete this exercise?</strong></p>
-        <button class="cancel-delete-btn" value="cancel">Cancel</button>
-        <button class="confirm-delete-btn" value="yesDelete">Yes</button>
-    </div>
+        <button class="cancel-delete-btn" value="cancel" data-id="${exercise._id}">Cancel</button>
+        <button class="confirm-delete-btn" value="yesDelete" data-id="${exercise._id}">Yes</button>
     `;
 } 
+
+const originalExerciseCardHTML = (exercise) => {
+    return `
+        <h4>${exercise.description}</h4>
+        <p>Duration: ${exercise.duration}</p>
+        <p>Date: ${exercise.date}</p>
+        <button class="delete-btn" data-id="${exercise._id}">Delete</button>
+    `;
+}
 
 
 
@@ -175,12 +182,14 @@ modalContent.addEventListener("click", async (e) => {
 
         if(e.target.classList.contains("confirm-delete-btn")) {
             console.log("Delete-confirmation: ", e.target);
+            
 
             const clickedID = e.target.dataset.id;
+            console.log("clickedID: ", e.target.dataset.id);
             const exercise = getExercise(clickedID);
             const card = e.target.closest(".exercise-card");
 
-            card.innerHTML = exerciseCardHTML(exercise);
+            card.innerHTML = originalExerciseCardHTML(exercise);
             return;
         }
 
@@ -191,7 +200,7 @@ modalContent.addEventListener("click", async (e) => {
             const exercise = getExercise(clickedID);
             const card = e.target.closest(".exercise-card");
 
-            card.innerHTML = exerciseCardHTML(exercise);
+            card.innerHTML = originalExerciseCardHTML(exercise);
             return;
         }
     });
