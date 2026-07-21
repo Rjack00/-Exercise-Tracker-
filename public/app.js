@@ -79,6 +79,18 @@ const originalExerciseCardHTML = (exercise) => {
     `;
 }
 
+const deleteExercise = async (exerciseId) => {
+    const response = await fetch(`/api/exercises/${exerciseId}`, {
+        method: "DELETE"
+    });
+
+    if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Delete failed");
+    }
+
+    return response.json();
+}
 
 
 function showModal({
