@@ -230,10 +230,52 @@ app.get('/api/users/:_id/logs', async (req, res) => {
 });
 
 
+// ────────────────────── DELETE EXERCISE ──────────────────────
+
+app.delete('/api/exercises/:exerciseId', async (req, res) => {
+  try {
+
+    const { exerciseId } = req.params;
+
+    const user = await User.findOne({
+      "log._id": exerciseId
+    });
+    
+    if (!user) {
+      return res.status(404).json({
+        error: "Exercise not found"
+      });
+    }
+
+    const exercise = user.log.id(exerciseId);
+
+    if (!exercise) {
+      return res.status(404).json({
+        error: "Exercise not found"
+      });
+    }
+
+    await exercise.deleteOne();
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Exercise successfully deleted."
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status('status number...').json({ error: 'Error message here...' })
+  }
+})
+
+
 // 404 middleware (Route not found)
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
+
 
 // ──────────────────────────────────────────────────────────────
 // 5. START SERVER — Always present
