@@ -84,12 +84,13 @@ const deleteExercise = async (exerciseId) => {
         method: "DELETE"
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.error || "Delete failed");
     }
 
-    return response.json();
+    return data;
 }
 
 
