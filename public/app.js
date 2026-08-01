@@ -12,7 +12,7 @@ const modalJson = document.getElementById("modal-json");
 const modalJsonSection = document.querySelector("#response-modal details");
 const modalButtons = document.getElementById("modal-buttons");
 const closeBtn = document.getElementById('close-btn');
-let currentLog = [];
+let currentData = [];
 
 // ───────────────── HELPER FUNCTIONS ──────────────────────
 
@@ -56,7 +56,7 @@ const exerciseLogHTML = (data) => {
 }
 
 const getExercise = (id) => {
-    return currentLog.find(ex => ex._id === id);
+    return currentData.log.find(ex => ex._id === id);
 }
 
 const deleteExerciseCardHTML = (exercise) => {
@@ -136,6 +136,7 @@ function showModal({
     });
 };
 
+
 function showError(message) {
     return showModal({
         title: "Error",
@@ -199,10 +200,15 @@ modalContent.addEventListener("click", async (e) => {
 
             const clickedID = e.target.dataset.id;
             console.log("clickedID: ", e.target.dataset.id);
-            const exercise = getExercise(clickedID);
-            const card = e.target.closest(".exercise-card");
 
-            card.innerHTML = originalExerciseCardHTML(exercise);
+            await deleteExercise(clickedID);
+
+            currentData.log = currentData.log.filter(ex => ex._id !== clickedID);
+            currentData.count = currentData.log.length;
+            
+            modalContent.innerHTML = exerciseLogHTML(currentData);
+            modalJson.textContent = JSON.stringify(currentData, null, 2);
+
             return;
         }
 
@@ -366,7 +372,7 @@ logForm.addEventListener('submit', async (e) => {
 
         console.log('Data: ', data);
 
-        currentLog = data.log;
+        currentData = data;
 
         // let html = `
         // <div class="ux-response-head">
