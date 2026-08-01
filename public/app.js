@@ -80,17 +80,22 @@ const originalExerciseCardHTML = (exercise) => {
 }
 
 const deleteExercise = async (exerciseId) => {
-    const response = await fetch(`/api/exercises/${exerciseId}`, {
+    try {
+        const response = await fetch(`/api/exercises/${exerciseId}`, {
         method: "DELETE"
-    });
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (!response.ok) {
-        throw new Error(data.error || "Delete failed");
+        if (!response.ok) {
+            throw new Error(data.error || "Delete failed");
+        }
+
+        return data;
+    } catch (error) {
+        console.error("Delete failed: ", error);
+        throw error;
     }
-
-    return data;
 }
 
 
