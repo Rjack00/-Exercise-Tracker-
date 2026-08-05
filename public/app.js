@@ -36,6 +36,7 @@ const exerciseCardHTML = (exercise) => {
             <p>Duration: ${exercise.duration}</p>
             <p>Date: ${exercise.date}</p>
             <button class="delete-btn" data-id="${exercise._id}">Delete</button>
+            <button class="edit-btn" data-id="${exercise._id}">Edit</button>
         </div>
         `;
 }
@@ -45,7 +46,11 @@ const exerciseLogHTML = (data) => {
         <div class="ux-response-head">
             <h3>${data.username}</h3>
             <p>ID: ${data._id}</p>
-            <p>Total Exercises: ${data.count}</p>
+            ${
+                data.count > 0 
+                ? `<p>Total Exercises: ${data.count}</p>` 
+                : `<p>No exercises logged.</p>`
+            }
         </div>
             `;
     data.log.forEach(exercise => {
@@ -57,6 +62,46 @@ const exerciseLogHTML = (data) => {
 
 const getExercise = (id) => {
     return currentData.log.find(ex => ex._id === id);
+}
+
+const editExerciseCardHTML = (exercise) => {
+    const isoDate = new Date(exercise.date)
+        .toISOString()
+        .split("T")[0];
+    
+    return `
+    <div class="exercise-card">
+
+        <label>Description</label>
+        <input
+            class="edit-description"
+            type="text"
+            value="${exercise.description}">
+        <label>Duration</label>
+        <input
+            class="edit-duration"
+            type="number"
+            value="${exercise.duration}">
+        <label>Date</label>
+        <input
+            class="edit-date"
+            type="date"
+            value="${isoDate}">
+
+        <button
+            class="cancel-edit-btn"
+            data-id="${exercise._id}">
+            Cancel
+        </button>
+        
+        <button
+            class="save-edit-btn"
+            data-id="${exercise._id}">
+            Save
+        </button>
+
+    </div>
+    `;
 }
 
 const deleteExerciseCardHTML = (exercise) => {
@@ -76,6 +121,7 @@ const originalExerciseCardHTML = (exercise) => {
         <p>Duration: ${exercise.duration}</p>
         <p>Date: ${exercise.date}</p>
         <button class="delete-btn" data-id="${exercise._id}">Delete</button>
+        <button class="edit-btn" data-id="${exercise._id}">Edit</button>
     `;
 }
 
@@ -183,7 +229,31 @@ const loadUsers = async () => {
 
 
 modalContent.addEventListener("click", async (e) => {
-        console.log("Delete button target: ", e.target);
+        console.log("Button target: ", e.target);
+        
+        if(e.target.classList.contains("edit-btn")) {
+            console.log("Edit button clicked!: ", e.target.dataset.id);
+            console.log("e.target.dataset: ", e.target.dataset);
+            const clickedID = e.target.dataset.id;
+
+            const exercise = getExercise(clickedID);
+
+            const card = e.target.closest(".exercise-card");
+            card.innerHTML = editExerciseCardHTML(exercise);
+            return;
+        }
+
+        if(e.target.classList.contains("cancel-edit-btn")) {
+            console.log("Cancel Edit: ", e.target);
+
+            const clickedID = e.target.dataset.id;
+            const exercise = getExercise(clickedID);
+            const card = e.target.closest(".exercise-card");
+
+            card.innerHTML = originalExerciseCardHTML(exercise);
+            return;
+        }
+
         
         if(e.target.classList.contains("delete-btn")) {
 
@@ -200,20 +270,21 @@ modalContent.addEventListener("click", async (e) => {
         }
 
         if(e.target.classList.contains("confirm-delete-btn")) {
-            console.log("Delete-confirmation: ", e.target);
-            
-
             const clickedID = e.target.dataset.id;
-            console.log("clickedID: ", e.target.dataset.id);
 
-            await deleteExercise(clickedID);
+            try {
+                await deleteExercise(clickedID);
 
-            currentData.log = currentData.log.filter(ex => ex._id !== clickedID);
-            currentData.count = currentData.log.length;
+                currentData.log = currentData.log.filter(ex => ex._id !== clickedID);
+                currentData.count = currentData.log.length;
+                
+                modalContent.innerHTML = exerciseLogHTML(currentData);
+                modalJson.textContent = JSON.stringify(currentData, null, 2);
+
+            } catch (error) {
+                await showError(error.message);
+            }
             
-            modalContent.innerHTML = exerciseLogHTML(currentData);
-            modalJson.textContent = JSON.stringify(currentData, null, 2);
-
             return;
         }
 
