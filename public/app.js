@@ -300,9 +300,6 @@ modalContent.addEventListener("click", async (e) => {
         }
     });
 
-// closeBtn.addEventListener("click", () => {
-//     modal.close();
-// });
 // ─────────────────── end modal testing ──────────────────────
 
 createUserForm.addEventListener('submit', async (e) => {
@@ -390,18 +387,6 @@ exerciseForm.addEventListener("submit", async (e) => {
             throw new Error(data.error || 'Request failed');
         }
 
-        // responseOutputJson.textContent = JSON.stringify(data, null, 2);
-
-        // responseOutputUX.innerHTML = `
-        // <div class="exercise-card">
-        //     <h3>Exercise Added</h3>
-        //     <p><strong>User:</strong> ${data.username}</p>
-        //     <p><strong>Exercise:</strong> ${data.description}</p>
-        //     <p><strong>Duration:</strong> ${data.duration} min</p>
-        //     <p><strong>Date:</strong> ${data.date}</p>
-        // </div>
-        // `;
-
         const result = await showModal({
             title: "Exercise Added",
             content: exerciseAddedHTML(data),
@@ -444,37 +429,16 @@ logForm.addEventListener('submit', async (e) => {
         const response = await fetch(url);
         const data = await response.json();
 
-        // responseOutputJson.textContent = JSON.stringify(data, null, 2);
-
         console.log('Data: ', data);
 
         currentData = data;
-
-        // let html = `
-        // <div class="ux-response-head">
-        //     <h3>${data.username}</h3>
-        //     <p>ID: ${data._id}</p>
-        //     <p>Total Exercises: ${data.count}</p>
-        // </div>
-        //     `;
-
-        // data.log.forEach(exercise => {
-        //     html += `
-        //     <div class="exercise-card">
-        //         <h4>${exercise.description}</h4>
-        //         <p>Duration: ${exercise.duration}</p>
-        //         <p>Date: ${exercise.date}</p>
-        //     </div>
-        //     `
-        // });
 
         const result = await showModal({
             title: "Exercises Logged",
             content: exerciseLogHTML(data),
             json: data,
             buttons: [
-                { text: "Cancel", value: "cancel"},
-                { text: "Delete", value: "delete"}
+                { text: "Close", value: "close"},
             ]
         });
 
