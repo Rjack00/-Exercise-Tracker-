@@ -77,8 +77,6 @@ const editExerciseCardHTML = (exercise) => {
     const formattedDate = formatDateForEditInput(new Date(exercise.date));
     
     return `
-    <div class="exercise-card">
-
         <label>Description</label>
         <input
             class="edit-description"
@@ -106,8 +104,6 @@ const editExerciseCardHTML = (exercise) => {
             data-id="${exercise._id}">
             Save
         </button>
-
-    </div>
     `;
 }
 
@@ -227,7 +223,6 @@ const loadUsers = async () => {
 
 
 modalContent.addEventListener("click", async (e) => {
-        console.log("Button target: ", e.target);
         
         if(e.target.classList.contains("edit-btn")) {
             console.log("Edit button clicked!: ", e.target.dataset.id);
@@ -239,6 +234,22 @@ modalContent.addEventListener("click", async (e) => {
             const card = e.target.closest(".exercise-card");
             card.innerHTML = editExerciseCardHTML(exercise);
             return;
+        }
+
+        if(e.target.classList.contains("save-edit-btn")) {
+            const card = e.target.closest(".exercise-card");
+            const description = 
+                card.querySelector(".edit-description").value;
+            const duration = 
+                card.querySelector(".edit-duration").value;
+            const date = 
+                card.querySelector(".edit-date").value;
+
+            console.log({
+                description,
+                duration,
+                date
+            });
         }
 
         if(e.target.classList.contains("cancel-edit-btn")) {
