@@ -28,18 +28,19 @@ const exerciseAddedHTML = (data) => {
     `;
 }
 
-const exerciseCardHTML = (exercise) => {
-     
-     return `
-        <div class="exercise-card" data-id="${exercise._id}">
-            <h4>${exercise.description}</h4>
+const exerciseCardBodyHTML = (exercise) => `
+    <h4>${exercise.description}</h4>
             <p>Duration: ${exercise.duration}</p>
             <p>Date: ${exercise.date}</p>
             <button class="delete-btn" data-id="${exercise._id}">Delete</button>
             <button class="edit-btn" data-id="${exercise._id}">Edit</button>
+`;
+
+const exerciseCardHTML = (exercise) => `
+        <div class="exercise-card" data-id="${exercise._id}">
+            ${exerciseCardBodyHTML(exercise)}
         </div>
         `;
-}
 
 const exerciseLogHTML = (data) => {
     let html = `
@@ -64,10 +65,16 @@ const getExercise = (id) => {
     return currentData.log.find(ex => ex._id === id);
 }
 
+const formatDateForEditInput = (date) => {
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${year}-${month}-${day}`;
+}
+
 const editExerciseCardHTML = (exercise) => {
-    const isoDate = new Date(exercise.date)
-        .toISOString()
-        .split("T")[0];
+    const formattedDate = formatDateForEditInput(new Date(exercise.date));
     
     return `
     <div class="exercise-card">
@@ -86,7 +93,7 @@ const editExerciseCardHTML = (exercise) => {
         <input
             class="edit-date"
             type="date"
-            value="${isoDate}">
+            value="${formattedDate}">
 
         <button
             class="cancel-edit-btn"
@@ -115,15 +122,6 @@ const deleteExerciseCardHTML = (exercise) => {
     `;
 } 
 
-const originalExerciseCardHTML = (exercise) => {
-    return `
-        <h4>${exercise.description}</h4>
-        <p>Duration: ${exercise.duration}</p>
-        <p>Date: ${exercise.date}</p>
-        <button class="delete-btn" data-id="${exercise._id}">Delete</button>
-        <button class="edit-btn" data-id="${exercise._id}">Edit</button>
-    `;
-}
 
 const deleteExercise = async (exerciseId) => {
     try {
@@ -250,7 +248,7 @@ modalContent.addEventListener("click", async (e) => {
             const exercise = getExercise(clickedID);
             const card = e.target.closest(".exercise-card");
 
-            card.innerHTML = originalExerciseCardHTML(exercise);
+            card.innerHTML = exerciseCardBodyHTML(exercise);
             return;
         }
 
@@ -295,7 +293,7 @@ modalContent.addEventListener("click", async (e) => {
             const exercise = getExercise(clickedID);
             const card = e.target.closest(".exercise-card");
 
-            card.innerHTML = originalExerciseCardHTML(exercise);
+            card.innerHTML = exerciseCardBodyHTML(exercise);
             return;
         }
     });
