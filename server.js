@@ -232,44 +232,54 @@ app.get('/api/users/:_id/logs', async (req, res) => {
 
 // ────────────────────── UPDATE EXERCISE ──────────────────────
 
-// app.update('/api/exercises/:exerciseId', async (req, res) => {
-//   try {
-//     const { exerciseId } = req.params;
+app.put('/api/exercises/:exerciseId', async (req, res) => {
+  try {
+    const { exerciseId } = req.params;
 
-//     const user = await User.findOne({
-//       "log._id": exerciseId
-//     });
+    const user = await User.findOne({
+      "log._id": exerciseId
+    });
     
-//     if (!user) {
-//       return res.status(404).json({
-//         error: "Exercise not found"
-//       });
-//     }
+    if (!user) {
+      return res.status(404).json({
+        error: "Exercise not found"
+      });
+    }
 
-//     const exercise = user.log.id(exerciseId);
+    const exercise = user.log.id(exerciseId);
 
-//     if (!exercise) {
-//       return res.status(404).json({
-//         error: "Exercise not found"
-//       });
+    if (!exercise) {
+      return res.status(404).json({
+        error: "Exercise not found"
+      });
+    }
 
-//       // UPDATE functionality ....
+    // UPDATE functionality ....
+    const { description, duration, date } = req.body;
+    console.log("req.body:", req.body);
 
-//       await user.save();
+    exercise.description = description.trim();
+    exercise.duration = Number(duration);
+    exercise.date = parseLocalDate(date);
+    console.log("parseLocalDate(): ", exercise.date);
 
-//       res.json({
-//         message: "Exercise updated successfully.",
-//         exercise: {
+    await user.save();
 
-//         }
-//       })
-//     }
+    res.json({
+      message: "Exercise updated successfully.",
+      exercise: {
+        _id: exercise._id,
+        description: exercise.description,
+        duration: exercise.duration,
+        date: exercise.date.toDateString()
+      }
+    });
 
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Server Error' });
-//   }
-// })
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server Error' });
+  }
+})
 
 // ────────────────────── DELETE EXERCISE ──────────────────────
 
