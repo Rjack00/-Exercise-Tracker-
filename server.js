@@ -258,9 +258,29 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
     const { description, duration, date } = req.body;
     console.log("req.body:", req.body);
 
+    if (!description || duration === undefined || !date) {
+      return res.status(400).json({
+        error: "Description, duration, and date are required"
+      });
+    }
+
+    if (isNaN(duration) || Number(duration) <= 0) {
+      return res.status(400).json({
+        error: "Duration must be a positive number"
+      });
+    }
+
+    const exerciseDate = parseLocalDate(date);
+
+    if (exerciseDate.toString() === "Invalid Date") {
+      return res.status(400).json({
+        error: "Invalid date format"
+      });
+    }
+
     exercise.description = description.trim();
     exercise.duration = Number(duration);
-    exercise.date = parseLocalDate(date);
+    exercise.date = exerciseDate;
     console.log("parseLocalDate(): ", exercise.date);
 
     await user.save();
