@@ -236,6 +236,12 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
   try {
     const { exerciseId } = req.params;
 
+    if (!mongoose.Types.ObjectId.isValid(exerciseId)) {
+  return res.status(400).json({
+    error: "Invalid exercise ID"
+  });
+}
+
     const user = await User.findOne({
       "log._id": exerciseId
     });
