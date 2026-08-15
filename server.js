@@ -48,7 +48,17 @@ mongoose.connect(process.env.MONGO_URI)  // Connect using URI from .env
 // ──────────────────────────────────────────────────────────────
 const parseLocalDate = (dateStr) => {
   const [year, month, day] = dateStr.split('-').map(Number);
-  return new Date(year, month -1, day);
+  const date =  new Date(year, month -1, day);
+
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return new Date("invalid");
+  }
+
+  return date;
 }
 
 // ──────────────────────────────────────────────────────────────
