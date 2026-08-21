@@ -139,6 +139,31 @@ const deleteExercise = async (exerciseId) => {
 }
 
 
+const updateExercise = async (exerciseId, exerciseData) => {
+    try {
+        const response = await fetch(`/api/exercises/${exerciseId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(exerciseData)
+        });
+
+        const data = await response.json();
+
+        if(!response.ok) {
+            throw new Error(data.error || "Update failed");
+        }
+
+        return data;
+
+    } catch (error) {
+        console.error("Update failed: ", error);
+        throw error;
+    }
+}
+
+
 function showModal({
     title,
     content,
