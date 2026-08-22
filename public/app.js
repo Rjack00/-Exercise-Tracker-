@@ -244,7 +244,7 @@ const loadUsers = async () => {
         console.error('Failed to load users: ', error);
     }
 }
-// ────────────────────── BUTTON LISTENERS ──────────────────────
+// ────────────────────── DELEGATED CLICK EVENT HANDLING ──────────────────────
 
 
 modalContent.addEventListener("click", async (e) => {
@@ -269,12 +269,26 @@ modalContent.addEventListener("click", async (e) => {
                 card.querySelector(".edit-duration").value;
             const date = 
                 card.querySelector(".edit-date").value;
+            
+            const clickedID = e.target.dataset.id;
+
+            const exerciseData = {
+                description,
+                duration,
+                date
+            }
+
+            const result = await updateExercise(clickedID, exerciseData);
+
+            console.log("Save Button Result :", result);
 
             console.log({
                 description,
                 duration,
                 date
             });
+
+            return;
         }
 
         if(e.target.classList.contains("cancel-edit-btn")) {
@@ -334,7 +348,7 @@ modalContent.addEventListener("click", async (e) => {
         }
     });
 
-// ─────────────────── end modal testing ──────────────────────
+// ─────────────────── end delegated click event handling ──────────────────────
 
 createUserForm.addEventListener('submit', async (e) => {
     e.preventDefault();
