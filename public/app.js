@@ -278,15 +278,13 @@ modalContent.addEventListener("click", async (e) => {
                 date
             }
 
-            const result = await updateExercise(clickedID, exerciseData);
+            try {
+                const result = await updateExercise(clickedID, exerciseData);
+                console.log("Save Button Result :", result);
 
-            console.log("Save Button Result :", result);
-
-            console.log({
-                description,
-                duration,
-                date
-            });
+            } catch (error) {
+                await showError(error.message);
+            }
 
             return;
         }
