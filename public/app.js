@@ -282,6 +282,22 @@ modalContent.addEventListener("click", async (e) => {
                 const result = await updateExercise(clickedID, exerciseData);
                 console.log("Save Button Result :", result);
 
+                const updatedExercise = result.exercise;
+
+                console.log("updatedExercise: ", updatedExercise);
+
+                const exerciseIndex = currentData.log.findIndex(
+                    ex => ex._id === updatedExercise._id
+                );
+
+                currentData.log[exerciseIndex] = updatedExercise;
+
+                const card = e.target.closest(".exercise-card");
+
+                card.innerHTML = exerciseCardBodyHTML(updatedExercise);
+                
+                modalJson.textContent = JSON.stringify(currentData, null, 2);
+
             } catch (error) {
                 await showError(error.message);
             }
