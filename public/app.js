@@ -139,6 +139,31 @@ const deleteExercise = async (exerciseId) => {
 }
 
 
+const updateExercise = async (exerciseId, exerciseData) => {
+    try {
+        const response = await fetch(`/api/exercises/${exerciseId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(exerciseData)
+        });
+
+        const data = await response.json();
+
+        if(!response.ok) {
+            throw new Error(data.error || "Update failed");
+        }
+
+        return data;
+
+    } catch (error) {
+        console.error("Update failed: ", error);
+        throw error;
+    }
+}
+
+
 function showModal({
     title,
     content,
@@ -219,7 +244,7 @@ const loadUsers = async () => {
         console.error('Failed to load users: ', error);
     }
 }
-// ────────────────────── BUTTON LISTENERS ──────────────────────
+// ────────────────────── DELEGATED CLICK EVENT HANDLING ──────────────────────
 
 
 modalContent.addEventListener("click", async (e) => {
@@ -244,12 +269,44 @@ modalContent.addEventListener("click", async (e) => {
                 card.querySelector(".edit-duration").value;
             const date = 
                 card.querySelector(".edit-date").value;
+            
+            const clickedID = e.target.dataset.id;
 
-            console.log({
+            const exerciseData = {
                 description,
                 duration,
                 date
-            });
+            }
+
+            try {
+                const result = await updateExercise(clickedID, exerciseData);
+                console.log("Save Button Result :", result);
+
+                const updatedExercise = result.exercise;
+
+                console.log("updatedExercise: ", updatedExercise);
+
+                const exerciseIndex = currentData.log.findIndex(
+                    ex => ex._id === updatedExercise._id
+                );
+
+                if (exerciseIndex !== -1) {
+                    currentData.log[exerciseIndex] = updatedExercise;
+                } else {
+                    console.error("Updated exercise not found in currentData.log");
+                }
+
+                const card = e.target.closest(".exercise-card");
+
+                card.innerHTML = exerciseCardBodyHTML(updatedExercise);
+                
+                modalJson.textContent = JSON.stringify(currentData, null, 2);
+
+            } catch (error) {
+                await showError(error.message);
+            }
+
+            return;
         }
 
         if(e.target.classList.contains("cancel-edit-btn")) {
@@ -309,7 +366,7 @@ modalContent.addEventListener("click", async (e) => {
         }
     });
 
-// ─────────────────── end modal testing ──────────────────────
+// ─────────────────── end delegated click event handling ──────────────────────
 
 createUserForm.addEventListener('submit', async (e) => {
     e.preventDefault();

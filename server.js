@@ -48,7 +48,17 @@ mongoose.connect(process.env.MONGO_URI)  // Connect using URI from .env
 // ──────────────────────────────────────────────────────────────
 const parseLocalDate = (dateStr) => {
   const [year, month, day] = dateStr.split('-').map(Number);
-  return new Date(year, month -1, day);
+  const date =  new Date(year, month -1, day);
+
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return new Date("invalid");
+  }
+
+  return date;
 }
 
 // ──────────────────────────────────────────────────────────────
@@ -236,6 +246,12 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
   try {
     const { exerciseId } = req.params;
 
+    if (!mongoose.Types.ObjectId.isValid(exerciseId)) {
+  return res.status(400).json({
+    error: "Invalid exercise ID"
+  });
+}
+
     const user = await User.findOne({
       "log._id": exerciseId
     });
@@ -258,9 +274,29 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
     const { description, duration, date } = req.body;
     console.log("req.body:", req.body);
 
+    if (!description || duration === undefined || !date) {
+      return res.status(400).json({
+        error: "Description, duration, and date are required"
+      });
+    }
+
+    if (isNaN(duration) || Number(duration) <= 0) {
+      return res.status(400).json({
+        error: "Duration must be a positive number"
+      });
+    }
+
+    const exerciseDate = parseLocalDate(date);
+
+    if (exerciseDate.toString() === "Invalid Date") {
+      return res.status(400).json({
+        error: "Invalid date format"
+      });
+    }
+
     exercise.description = description.trim();
     exercise.duration = Number(duration);
-    exercise.date = parseLocalDate(date);
+    exercise.date = exerciseDate;
     console.log("parseLocalDate(): ", exercise.date);
 
     await user.save();
