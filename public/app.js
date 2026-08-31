@@ -290,7 +290,11 @@ modalContent.addEventListener("click", async (e) => {
                     ex => ex._id === updatedExercise._id
                 );
 
-                currentData.log[exerciseIndex] = updatedExercise;
+                if (exerciseIndex !== -1) {
+                    currentData.log[exerciseIndex] = updatedExercise;
+                } else {
+                    console.error("Updated exercise not found in currentData.log");
+                }
 
                 const card = e.target.closest(".exercise-card");
 
