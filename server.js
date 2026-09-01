@@ -74,7 +74,7 @@ app.get('/', (req, res) => {
 app.post('/api/users', async (req, res) => {
   const { username } = req.body;  // Form sends "username"
 
-  if (!username) {
+  if (!username || username.trim() === "") {
     return res.status(400).json({ error: 'Username is required' });
   }
 
