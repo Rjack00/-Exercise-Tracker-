@@ -90,6 +90,10 @@ app.post('/api/users', async (req, res) => {
       return res.status(400).json({ error: 'Username already taken' });  
     }
 
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: 'Invalid username' });
+    }
+
     return res.status(500).json({ error: 'Server error' });
   }
 });
