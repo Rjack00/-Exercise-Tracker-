@@ -122,8 +122,12 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
   const { _id } = req.params;  // User ID from URL
   const { description, duration, date } = req.body;  // Form fields
 
+  if (!mongoose.Types.ObjectId.isValid(_id)) {
+    return res.status(400).json({ error: "Invalid user ID" });
+  }
+
   // Validate required fields before DB calls
-  if(!description || !duration) {
+  if(!description || description.trim() === "" || !duration) {
     return res.status(400).json({ error: "Description and Duration are both required" });
   };
 
@@ -173,6 +177,11 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
   
   } catch (error) {
     console.error(error);
+
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: "Invalid exercise data"})
+    };
+
     res.status(500).json({ error: "Server error"})
   };
 
@@ -182,6 +191,11 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
 // ──────────── Get a user's full log (GET /api/users/:_id/logs) ────────────
 
 app.get('/api/users/:_id/logs', async (req, res) => {
+  
+  if(!mongoose.Types.ObjectId.isValid(req.params._id)) {
+    return res.status(400).json({ error: 'Invalid user ID' })
+  }
+  
   // Find the user; if not found return json
   try {
     const user = await User.findById(req.params._id);
