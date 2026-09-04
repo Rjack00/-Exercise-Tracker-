@@ -208,9 +208,11 @@ app.get('/api/users/:_id/logs', async (req, res) => {
       if(fromStr) {
         const from = parseLocalDate(fromStr);
 
-        if(from.toString() !== 'Invalid Date') {
-          log = log.filter(exercise => exercise.date >= from);
+        if(from.toString() === 'Invalid Date') {
+          return res.status(400).json({ error: "Invalid from date" })
         }
+
+        log = log.filter(exercise => exercise.date >= from);
       };
 
     // TO filter — make it inclusive of the entire day
@@ -218,17 +220,31 @@ app.get('/api/users/:_id/logs', async (req, res) => {
       if(toStr) {
         const to = parseLocalDate(toStr);
         
-        if(to.toString() !== 'Invalid Date') {
-          to.setHours(23, 59, 59, 999);  // End of day
-          log = log.filter(exercise => exercise.date <= to);
+        if(to.toString() === 'Invalid Date') {
+          return res.status(400).json({ error: "Invalid to date" })
         }
+
+        to.setHours(23, 59, 59, 999);  // End of day
+        log = log.filter(exercise => exercise.date <= to);
       };
 
     // Handle ?limit
-    const limit = req.query.limit ? Number(req.query.limit) : null;
-    if(limit !== null && !isNaN(limit) && limit > 0) {
-      log = log.slice(0, limit);
+    const limit = req.query.limit;
+    
+    if (limit !== undefined) {
+      const limitNumber = Number(limit);
+
+      if(isNaN(limitNumber) || limitNumber < 1) {
+      return res.status(400).json({ error: "Invalid limit" });
     };
+
+    log = log.slice(0, limitNumber);
+
+    }
+
+    
+
+    
 
     // Map response output & format date (fCC wants strings)
     const formattedLog = log.map(ex => ({
@@ -292,7 +308,12 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
     const { description, duration, date } = req.body;
     console.log("req.body:", req.body);
 
-    if (!description || duration === undefined || !date) {
+    if (
+      !description || 
+      description.trim() === "" ||
+      duration === undefined || 
+      !date
+    ) {
       return res.status(400).json({
         error: "Description, duration, and date are required"
       });
