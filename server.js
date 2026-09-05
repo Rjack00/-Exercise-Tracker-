@@ -281,10 +281,10 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
     const { exerciseId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(exerciseId)) {
-  return res.status(400).json({
-    error: "Invalid exercise ID"
-  });
-}
+       return res.status(400).json({
+         error: "Invalid exercise ID"
+       });
+    }
 
     const user = await User.findOne({
       "log._id": exerciseId
@@ -306,7 +306,6 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
 
     // UPDATE functionality ....
     const { description, duration, date } = req.body;
-    console.log("req.body:", req.body);
 
     if (
       !description || 
@@ -336,7 +335,6 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
     exercise.description = description.trim();
     exercise.duration = Number(duration);
     exercise.date = exerciseDate;
-    console.log("parseLocalDate(): ", exercise.date);
 
     await user.save();
 
@@ -352,6 +350,11 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
 
   } catch (error) {
     console.error(error);
+
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: "Invalid exercise data"})
+    };
+
     res.status(500).json({ error: 'Server Error' });
   }
 })
@@ -362,6 +365,12 @@ app.delete('/api/exercises/:exerciseId', async (req, res) => {
   try {
 
     const { exerciseId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(exerciseId)) {
+       return res.status(400).json({
+         error: "Invalid exercise ID"
+       });
+    }
 
     const user = await User.findOne({
       "log._id": exerciseId
@@ -407,6 +416,6 @@ app.use((req, res) => {
 // 5. START SERVER — Always present
 // ──────────────────────────────────────────────────────────────
 const listener = app.listen(process.env.PORT || 3000, () => {
-  console.log('Your app is listening on port ' + listener.address().port)
+  console.log(`Server listening on port ${listener.address().port}`);
 });
 
