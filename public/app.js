@@ -250,8 +250,7 @@ const loadUsers = async () => {
 modalContent.addEventListener("click", async (e) => {
         
         if(e.target.classList.contains("edit-btn")) {
-            console.log("Edit button clicked!: ", e.target.dataset.id);
-            console.log("e.target.dataset: ", e.target.dataset);
+           
             const clickedID = e.target.dataset.id;
 
             const exercise = getExercise(clickedID);
@@ -280,11 +279,8 @@ modalContent.addEventListener("click", async (e) => {
 
             try {
                 const result = await updateExercise(clickedID, exerciseData);
-                console.log("Save Button Result :", result);
 
                 const updatedExercise = result.exercise;
-
-                console.log("updatedExercise: ", updatedExercise);
 
                 const exerciseIndex = currentData.log.findIndex(
                     ex => ex._id === updatedExercise._id
@@ -310,7 +306,6 @@ modalContent.addEventListener("click", async (e) => {
         }
 
         if(e.target.classList.contains("cancel-edit-btn")) {
-            console.log("Cancel Edit: ", e.target);
 
             const clickedID = e.target.dataset.id;
             const exercise = getExercise(clickedID);
@@ -322,9 +317,6 @@ modalContent.addEventListener("click", async (e) => {
 
         
         if(e.target.classList.contains("delete-btn")) {
-
-            console.log("Delete button clicked!", e.target.dataset.id);
-            console.log("e.target.dataset: ", e.target.dataset);
 
             const clickedID = e.target.dataset.id;
 
@@ -355,8 +347,7 @@ modalContent.addEventListener("click", async (e) => {
         }
 
         if(e.target.classList.contains("cancel-delete-btn")) {
-            console.log("Cancel Delete: ", e.target);
-
+    
             const clickedID = e.target.dataset.id;
             const exercise = getExercise(clickedID);
             const card = e.target.closest(".exercise-card");
@@ -374,8 +365,6 @@ createUserForm.addEventListener('submit', async (e) => {
     try {
     
         const username = document.getElementById('uname').value;
-
-        console.log(username);
 
         const response = await fetch('/api/users', {
             method: 'POST',
@@ -407,8 +396,6 @@ createUserForm.addEventListener('submit', async (e) => {
             `,
             json: data
         });
-
-        console.log("result: ", result);
 
         e.target.reset();
 
@@ -459,8 +446,6 @@ exerciseForm.addEventListener("submit", async (e) => {
             json: data
         });
 
-        console.log("result: ", result);
-
         e.target.reset();
 
     } catch (error) {
@@ -495,8 +480,6 @@ logForm.addEventListener('submit', async (e) => {
         const response = await fetch(url);
         const data = await response.json();
 
-        console.log('Data: ', data);
-
         currentData = data;
 
         const result = await showModal({
@@ -507,8 +490,6 @@ logForm.addEventListener('submit', async (e) => {
                 { text: "Close", value: "close"},
             ]
         });
-
-        console.log("result: ", result);
 
         e.target.reset();
 
