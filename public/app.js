@@ -244,6 +244,8 @@ const loadUsers = async () => {
         console.error('Failed to load users: ', error);
     }
 }
+
+
 // ────────────────────── DELEGATED CLICK EVENT HANDLING ──────────────────────
 
 
@@ -378,14 +380,15 @@ createUserForm.addEventListener('submit', async (e) => {
 
         const data = await response.json();
 
+        if(!response.ok) {
+            throw new Error(data.error || 'Request failed');
+        }
+
         await loadUsers();
 
         exerciseUserSelect.value = data._id;
         logUserSelect.value = data._id;
 
-        if(!response.ok) {
-            throw new Error(data.error || 'Request failed');
-        }
 
         const result = await showModal({
             title: "User Created",
