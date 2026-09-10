@@ -253,9 +253,9 @@ modalContent.addEventListener("click", async (e) => {
         
         if(e.target.classList.contains("edit-btn")) {
            
-            const clickedID = e.target.dataset.id;
+            const clickedId = e.target.dataset.id;
 
-            const exercise = getExercise(clickedID);
+            const exercise = getExercise(clickedId);
 
             const card = e.target.closest(".exercise-card");
             card.innerHTML = editExerciseCardHTML(exercise);
@@ -271,7 +271,7 @@ modalContent.addEventListener("click", async (e) => {
             const date = 
                 card.querySelector(".edit-date").value;
             
-            const clickedID = e.target.dataset.id;
+            const clickedId = e.target.dataset.id;
 
             const exerciseData = {
                 description,
@@ -280,7 +280,7 @@ modalContent.addEventListener("click", async (e) => {
             }
 
             try {
-                const result = await updateExercise(clickedID, exerciseData);
+                const result = await updateExercise(clickedId, exerciseData);
 
                 const updatedExercise = result.exercise;
 
@@ -309,8 +309,8 @@ modalContent.addEventListener("click", async (e) => {
 
         if(e.target.classList.contains("cancel-edit-btn")) {
 
-            const clickedID = e.target.dataset.id;
-            const exercise = getExercise(clickedID);
+            const clickedId = e.target.dataset.id;
+            const exercise = getExercise(clickedId);
             const card = e.target.closest(".exercise-card");
 
             card.innerHTML = exerciseCardBodyHTML(exercise);
@@ -320,9 +320,9 @@ modalContent.addEventListener("click", async (e) => {
         
         if(e.target.classList.contains("delete-btn")) {
 
-            const clickedID = e.target.dataset.id;
+            const clickedId = e.target.dataset.id;
 
-            const exercise = getExercise(clickedID);
+            const exercise = getExercise(clickedId);
 
             const card = e.target.closest(".exercise-card");
             card.innerHTML = deleteExerciseCardHTML(exercise);
@@ -330,12 +330,12 @@ modalContent.addEventListener("click", async (e) => {
         }
 
         if(e.target.classList.contains("confirm-delete-btn")) {
-            const clickedID = e.target.dataset.id;
+            const clickedId = e.target.dataset.id;
 
             try {
-                await deleteExercise(clickedID);
+                await deleteExercise(clickedId);
 
-                currentData.log = currentData.log.filter(ex => ex._id !== clickedID);
+                currentData.log = currentData.log.filter(ex => ex._id !== clickedId);
                 currentData.count = currentData.log.length;
                 
                 modalContent.innerHTML = exerciseLogHTML(currentData);
@@ -350,8 +350,8 @@ modalContent.addEventListener("click", async (e) => {
 
         if(e.target.classList.contains("cancel-delete-btn")) {
     
-            const clickedID = e.target.dataset.id;
-            const exercise = getExercise(clickedID);
+            const clickedId = e.target.dataset.id;
+            const exercise = getExercise(clickedId);
             const card = e.target.closest(".exercise-card");
 
             card.innerHTML = exerciseCardBodyHTML(exercise);
