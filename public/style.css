@@ -40,7 +40,6 @@ form {
   width: 100%;
   max-width: 340px;
   border-radius: 15px;
-  /* border: 1px solid rgba(2, 154, 255, 0.986); */
   box-shadow: 0 0 9px rgb(247, 237, 149);
 }
 
@@ -65,8 +64,6 @@ input[type=submit] {
   border-radius: 3px;
   background-color: #db6300;
   color: rgb(255, 255, 255);
-  /* border: 1px solid grey;
-  box-shadow: 2px 2px #999; */
   cursor: pointer;
 }
 
@@ -111,7 +108,6 @@ dialog[open] {
 
 
 #response-output-json, #response-output-ux {
-  /* min-height: 120px; */
   padding: 1rem;
   border: 1px solid white;
   border-radius: 8px;
