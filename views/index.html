@@ -20,7 +20,6 @@
       <form action="/api/users/:_id/exercises" id="exercise-form" method="post">
         <h2>Add exercises</h2>
         <p class="code"><code>POST /api/users/:_id/exercises</code></p>
-        <!-- <input id="uid" type="text" name=":_id" placeholder=":_id" /> -->
         <select id="exercise-user-select" class="user-dropdown">
           <option value="">Select a user...</option>
         </select>
@@ -34,7 +33,6 @@
         <p class="code"><code>GET /api/users/:_id/logs?[from][&amp;to][&amp;limit]</code></p>
         <p class="optional-get-queries code"><strong>[ ]</strong> = optional</p>
         <p class="optional-get-queries code"><strong>from, to</strong> = dates (yyyy-mm-dd); <strong>limit</strong> = number</p>
-        <!-- <input id="log-user-id" type="text" placeholder="User ID" required/> -->
         <select id="log-user-select" class="user-dropdown">
           <option value="">Select a user...</option>
         </select>
