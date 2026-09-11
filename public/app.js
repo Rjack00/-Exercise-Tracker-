@@ -1,5 +1,3 @@
-const responseOutputJson = document.getElementById('response-output-json');
-const responseOutputUX = document.getElementById('response-output-ux');
 const createUserForm = document.getElementById('create-user-form');
 const exerciseForm = document.getElementById('exercise-form');
 const logForm = document.getElementById('log-form');
@@ -11,7 +9,6 @@ const modalContent = document.getElementById("modal-content");
 const modalJson = document.getElementById("modal-json");
 const modalJsonSection = document.querySelector("#response-modal details");
 const modalButtons = document.getElementById("modal-buttons");
-const closeBtn = document.getElementById('close-btn');
 let currentData = [];
 
 // ───────────────── HELPER FUNCTIONS ──────────────────────
@@ -61,8 +58,8 @@ const exerciseLogHTML = (data) => {
     return html;
 }
 
-const getExercise = (id) => {
-    return currentData.log.find(ex => ex._id === id);
+const getExercise = (exerciseId) => {
+    return currentData.log.find(ex => ex._id === exerciseId);
 }
 
 const formatDateForEditInput = (date) => {
@@ -151,7 +148,7 @@ const updateExercise = async (exerciseId, exerciseData) => {
 
         const data = await response.json();
 
-        if(!response.ok) {
+        if (!response.ok) {
             throw new Error(data.error || "Update failed");
         }
 
@@ -251,7 +248,7 @@ const loadUsers = async () => {
 
 modalContent.addEventListener("click", async (e) => {
         
-        if(e.target.classList.contains("edit-btn")) {
+        if (e.target.classList.contains("edit-btn")) {
            
             const clickedId = e.target.dataset.id;
 
@@ -262,7 +259,7 @@ modalContent.addEventListener("click", async (e) => {
             return;
         }
 
-        if(e.target.classList.contains("save-edit-btn")) {
+        if (e.target.classList.contains("save-edit-btn")) {
             const card = e.target.closest(".exercise-card");
             const description = 
                 card.querySelector(".edit-description").value;
@@ -307,7 +304,7 @@ modalContent.addEventListener("click", async (e) => {
             return;
         }
 
-        if(e.target.classList.contains("cancel-edit-btn")) {
+        if (e.target.classList.contains("cancel-edit-btn")) {
 
             const clickedId = e.target.dataset.id;
             const exercise = getExercise(clickedId);
@@ -318,7 +315,7 @@ modalContent.addEventListener("click", async (e) => {
         }
 
         
-        if(e.target.classList.contains("delete-btn")) {
+        if (e.target.classList.contains("delete-btn")) {
 
             const clickedId = e.target.dataset.id;
 
@@ -329,7 +326,7 @@ modalContent.addEventListener("click", async (e) => {
             return;
         }
 
-        if(e.target.classList.contains("confirm-delete-btn")) {
+        if (e.target.classList.contains("confirm-delete-btn")) {
             const clickedId = e.target.dataset.id;
 
             try {
@@ -348,7 +345,7 @@ modalContent.addEventListener("click", async (e) => {
             return;
         }
 
-        if(e.target.classList.contains("cancel-delete-btn")) {
+        if (e.target.classList.contains("cancel-delete-btn")) {
     
             const clickedId = e.target.dataset.id;
             const exercise = getExercise(clickedId);
@@ -380,7 +377,7 @@ createUserForm.addEventListener('submit', async (e) => {
 
         const data = await response.json();
 
-        if(!response.ok) {
+        if (!response.ok) {
             throw new Error(data.error || 'Request failed');
         }
 
@@ -390,7 +387,7 @@ createUserForm.addEventListener('submit', async (e) => {
         logUserSelect.value = data._id;
 
 
-        const result = await showModal({
+        await showModal({
             title: "User Created",
             content: `
             <div class="ux-response-head">
@@ -439,11 +436,11 @@ exerciseForm.addEventListener("submit", async (e) => {
 
         const data = await response.json();
         
-        if(!response.ok) {
+        if (!response.ok) {
             throw new Error(data.error || 'Request failed');
         }
 
-        const result = await showModal({
+        await showModal({
             title: "Exercise Added",
             content: exerciseAddedHTML(data),
             json: data
@@ -485,7 +482,7 @@ logForm.addEventListener('submit', async (e) => {
 
         currentData = data;
 
-        const result = await showModal({
+        await showModal({
             title: "Exercises Logged",
             content: exerciseLogHTML(data),
             json: data,
@@ -497,7 +494,7 @@ logForm.addEventListener('submit', async (e) => {
         e.target.reset();
 
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
 });
 
