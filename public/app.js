@@ -9,21 +9,21 @@ const modalContent = document.getElementById("modal-content");
 const modalJson = document.getElementById("modal-json");
 const modalJsonSection = document.querySelector("#response-modal details");
 const modalButtons = document.getElementById("modal-buttons");
-let currentData = [];
+let currentData = {
+    log: []
+};
 
 // ───────────────── HELPER FUNCTIONS ──────────────────────
 
-const exerciseAddedHTML = (data) => {
-    return `
-        <div class="exercise-card">
-            <h3>Exercise Added</h3>
-            <p><strong>User:</strong> ${data.username}</p>
-            <p><strong>Exercise:</strong> ${data.description}</p>
-            <p><strong>Duration:</strong> ${data.duration} min</p>
-            <p><strong>Date:</strong> ${data.date}</p>
-        </div>
-    `;
-};
+const exerciseAddedHTML = (data) => `
+    <div class="exercise-card">
+        <h3>Exercise Added</h3>
+        <p><strong>User:</strong> ${data.username}</p>
+        <p><strong>Exercise:</strong> ${data.description}</p>
+        <p><strong>Duration:</strong> ${data.duration} min</p>
+        <p><strong>Date:</strong> ${data.date}</p>
+    </div>
+`;
 
 const exerciseCardBodyHTML = (exercise) => `
     <h4>${exercise.description}</h4>
@@ -34,10 +34,10 @@ const exerciseCardBodyHTML = (exercise) => `
 `;
 
 const exerciseCardHTML = (exercise) => `
-        <div class="exercise-card" data-id="${exercise._id}">
-            ${exerciseCardBodyHTML(exercise)}
-        </div>
-        `;
+    <div class="exercise-card" data-id="${exercise._id}">
+        ${exerciseCardBodyHTML(exercise)}
+    </div>
+`;
 
 const exerciseLogHTML = (data) => {
     let html = `
@@ -50,7 +50,7 @@ const exerciseLogHTML = (data) => {
                 : `<p>No exercises logged.</p>`
             }
         </div>
-            `;
+    `;
     data.log.forEach(exercise => {
         html += exerciseCardHTML(exercise);
     });
@@ -104,16 +104,14 @@ const editExerciseCardHTML = (exercise) => {
     `;
 };
 
-const deleteExerciseCardHTML = (exercise) => {
-    return `
-        <h4>${exercise.description}</h4>
-        <p>Duration: ${exercise.duration}</p>
-        <p>Date: ${exercise.date}</p>
-        <p><strong>Delete this exercise?</strong></p>
-        <button class="cancel-delete-btn" data-id="${exercise._id}">Cancel</button>
-        <button class="confirm-delete-btn" data-id="${exercise._id}">Yes</button>
-    `;
-};
+const deleteExerciseCardHTML = (exercise) => `
+    <h4>${exercise.description}</h4>
+    <p>Duration: ${exercise.duration}</p>
+    <p>Date: ${exercise.date}</p>
+    <p><strong>Delete this exercise?</strong></p>
+    <button class="cancel-delete-btn" data-id="${exercise._id}">Cancel</button>
+    <button class="confirm-delete-btn" data-id="${exercise._id}">Yes</button>
+`;
 
 
 const deleteExercise = async (exerciseId) => {
@@ -208,6 +206,10 @@ const loadUsers = async () => {
         const response = await fetch('/api/users');
         const users = await response.json();
 
+        if (!response.ok) {
+            throw new Error(users.error || "Failed to load users");
+        }
+
         for (let i = exerciseUserSelect.options.length - 1; i >= 1; i--) {
             exerciseUserSelect.remove(i);
             logUserSelect.remove(i);
@@ -227,7 +229,7 @@ const loadUsers = async () => {
         });
 
     } catch (error) {
-        console.error('Failed to load users: ', error);
+        await showError(error.message);
     }
 };
 
