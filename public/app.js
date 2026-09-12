@@ -23,7 +23,7 @@ const exerciseAddedHTML = (data) => {
             <p><strong>Date:</strong> ${data.date}</p>
         </div>
     `;
-}
+};
 
 const exerciseCardBodyHTML = (exercise) => `
     <h4>${exercise.description}</h4>
@@ -56,11 +56,11 @@ const exerciseLogHTML = (data) => {
     });
 
     return html;
-}
+};
 
 const getExercise = (exerciseId) => {
     return currentData.log.find(ex => ex._id === exerciseId);
-}
+};
 
 const formatDateForEditInput = (date) => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -68,7 +68,7 @@ const formatDateForEditInput = (date) => {
     const year = date.getFullYear();
 
     return `${year}-${month}-${day}`;
-}
+};
 
 const editExerciseCardHTML = (exercise) => {
     const formattedDate = formatDateForEditInput(new Date(exercise.date));
@@ -102,7 +102,7 @@ const editExerciseCardHTML = (exercise) => {
             Save
         </button>
     `;
-}
+};
 
 const deleteExerciseCardHTML = (exercise) => {
     return `
@@ -110,14 +110,13 @@ const deleteExerciseCardHTML = (exercise) => {
         <p>Duration: ${exercise.duration}</p>
         <p>Date: ${exercise.date}</p>
         <p><strong>Delete this exercise?</strong></p>
-        <button class="cancel-delete-btn" value="cancel" data-id="${exercise._id}">Cancel</button>
-        <button class="confirm-delete-btn" value="yesDelete" data-id="${exercise._id}">Yes</button>
+        <button class="cancel-delete-btn" data-id="${exercise._id}">Cancel</button>
+        <button class="confirm-delete-btn" data-id="${exercise._id}">Yes</button>
     `;
-} 
+};
 
 
 const deleteExercise = async (exerciseId) => {
-    try {
         const response = await fetch(`/api/exercises/${exerciseId}`, {
         method: "DELETE"
         });
@@ -129,15 +128,10 @@ const deleteExercise = async (exerciseId) => {
         }
 
         return data;
-    } catch (error) {
-        console.error("Delete failed: ", error);
-        throw error;
-    }
-}
+};
 
 
 const updateExercise = async (exerciseId, exerciseData) => {
-    try {
         const response = await fetch(`/api/exercises/${exerciseId}`, {
             method: "PUT",
             headers: {
@@ -153,12 +147,7 @@ const updateExercise = async (exerciseId, exerciseData) => {
         }
 
         return data;
-
-    } catch (error) {
-        console.error("Update failed: ", error);
-        throw error;
-    }
-}
+};
 
 
 function showModal({
@@ -187,7 +176,7 @@ function showModal({
         const btn = document.createElement("button");
         btn.textContent = buttonConfig.text;
 
-        btn.addEventListener("click", (e) => {
+        btn.addEventListener("click", () => {
             modal.close(buttonConfig.value);
         });
 
@@ -201,7 +190,7 @@ function showModal({
             resolve(modal.returnValue);
         }, { once: true });
     });
-};
+}
 
 
 function showError(message) {
@@ -210,7 +199,7 @@ function showError(message) {
         content: message,
         showJson: false
     });
-};
+}
 
 
 const loadUsers = async () => {
@@ -240,7 +229,7 @@ const loadUsers = async () => {
     } catch (error) {
         console.error('Failed to load users: ', error);
     }
-}
+};
 
 
 // ────────────────────── DELEGATED CLICK EVENT HANDLING ──────────────────────
@@ -285,11 +274,11 @@ modalContent.addEventListener("click", async (e) => {
                     ex => ex._id === updatedExercise._id
                 );
 
-                if (exerciseIndex !== -1) {
-                    currentData.log[exerciseIndex] = updatedExercise;
-                } else {
-                    console.error("Updated exercise not found in currentData.log");
-                }
+                if (exerciseIndex === -1) {
+                    throw new Error("Updated exercise not found.");
+                } 
+
+                currentData.log[exerciseIndex] = updatedExercise;
 
                 const card = e.target.closest(".exercise-card");
 
@@ -480,6 +469,10 @@ logForm.addEventListener('submit', async (e) => {
         const response = await fetch(url);
         const data = await response.json();
 
+        if (!response.ok) {
+            throw new Error(data.error || "Request failed");
+        }
+
         currentData = data;
 
         await showModal({
@@ -494,7 +487,7 @@ logForm.addEventListener('submit', async (e) => {
         e.target.reset();
 
     } catch (error) {
-        console.error(error);
+        await showError(error.message);
     }
 });
 
