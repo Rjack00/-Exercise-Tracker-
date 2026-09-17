@@ -1,5 +1,5 @@
 // ──────────────────────────────────────────────────────────────
-// 1. CORE IMPORTS — Always present in every Express + Mongoose app
+// CORE IMPORTS — Always present in every Express + Mongoose app
 // ──────────────────────────────────────────────────────────────
 const express = require('express')
 const app = express()
@@ -12,7 +12,7 @@ const mongoose = require('mongoose')
 const User = require('./models/user')
 
 // ──────────────────────────────────────────────────────────────
-// 2. GLOBAL MIDDLEWARE — Almost always present
+// GLOBAL MIDDLEWARE — Almost always present
 // ──────────────────────────────────────────────────────────────
 app.use(cors())  // Enable CORS for all routes (required for browser-based tests)
 
@@ -28,7 +28,7 @@ app.use(express.json())  // Parse JSON bodies → req.body
 app.use(express.static('public'))  // Serve static files (files in listed folder, i.e. CSS, JS, etc.)
 
 // ──────────────────────────────────────────────────────────────
-// 3. DATABASE CONNECTION — Standard in every Mongoose app
+// DATABASE CONNECTION — Standard in every Mongoose app
 // ──────────────────────────────────────────────────────────────
 // Startup validation
 if(!process.env.MONGO_URI) {
@@ -44,7 +44,7 @@ mongoose.connect(process.env.MONGO_URI)  // Connect using URI from .env
   });
 
 // ──────────────────────────────────────────────────────────────
-// 4. HELPER FUNCTIONS
+// HELPER FUNCTIONS
 // ──────────────────────────────────────────────────────────────
 const parseLocalDate = (dateStr) => {
   const [year, month, day] = dateStr.split('-').map(Number);
@@ -62,7 +62,7 @@ const parseLocalDate = (dateStr) => {
 }
 
 // ──────────────────────────────────────────────────────────────
-// 5. ROUTES
+// ROUTES
 // ──────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')  // Send the HTML form page
@@ -84,7 +84,6 @@ app.post('/api/users', async (req, res) => {
     const savedUser = await user.save();  // MongoDB generates _id automatically
     res.json({ username: savedUser.username, _id: savedUser._id });
   } catch (error) {
-    console.error('Save failed: ', error);
     
     if (error.code === 11000) {   // Duplicate key/value (username)
       return res.status(400).json({ error: 'Username already taken' });  
@@ -108,7 +107,6 @@ app.get('/api/users', async (req, res) => {
     res.json(users);     // Returns array of { username, _id }
 
   } catch (error) { 
-    console.error('Error: ', error);
     return res.status(500).json({ error: 'Server error'});
   }
   
@@ -127,9 +125,9 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
   }
 
   // Validate required fields before DB calls
-  if(!description || description.trim() === "" || !duration) {
+  if(!description || description.trim() === "" || duration === undefined) {
     return res.status(400).json({ error: "Description and Duration are both required" });
-  };
+  }
 
   if(isNaN(duration) || duration <= 0) {
     return res.status(400).json({ error: "Duration must be a positive number" });
@@ -176,11 +174,10 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     });
   
   } catch (error) {
-    console.error(error);
 
     if (error.name === 'ValidationError') {
       return res.status(400).json({ error: "Invalid exercise data"})
-    };
+    }
 
     res.status(500).json({ error: "Server error"})
   };
@@ -236,7 +233,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
 
       if(isNaN(limitNumber) || limitNumber < 1) {
       return res.status(400).json({ error: "Invalid limit" });
-    };
+    }
 
     log = log.slice(0, limitNumber);
 
@@ -266,8 +263,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Server Error' });
+    res.status(500).json({ error: 'Server error' });
     
   };
   
@@ -298,11 +294,6 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
 
     const exercise = user.log.id(exerciseId);
 
-    if (!exercise) {
-      return res.status(404).json({
-        error: "Exercise not found"
-      });
-    }
 
     // UPDATE functionality ....
     const { description, duration, date } = req.body;
@@ -349,13 +340,12 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
 
     if (error.name === 'ValidationError') {
-      return res.status(400).json({ error: "Invalid exercise data"})
-    };
+      return res.status(400).json({ error: "Invalid exercise data"});
+    }
 
-    res.status(500).json({ error: 'Server Error' });
+    res.status(500).json({ error: 'Server error' });
   }
 })
 
@@ -384,12 +374,6 @@ app.delete('/api/exercises/:exerciseId', async (req, res) => {
 
     const exercise = user.log.id(exerciseId);
 
-    if (!exercise) {
-      return res.status(404).json({
-        error: "Exercise not found"
-      });
-    }
-
     await exercise.deleteOne();
 
     await user.save();
@@ -400,7 +384,6 @@ app.delete('/api/exercises/:exerciseId', async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Server error" });
   }
 })
@@ -413,7 +396,7 @@ app.use((req, res) => {
 
 
 // ──────────────────────────────────────────────────────────────
-// 5. START SERVER — Always present
+// START SERVER — Always present
 // ──────────────────────────────────────────────────────────────
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log(`Server listening on port ${listener.address().port}`);
