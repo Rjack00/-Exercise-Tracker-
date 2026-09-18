@@ -17,14 +17,14 @@
         <input id="uname" type="text" name="username" placeholder="username" />
         <input type="submit" value="Submit" />
       </form>
-      <form action="/api/users/:_id/exercises" id="exercise-form" method="post">
+      <form id="exercise-form">
         <h2>Add exercises</h2>
         <p class="code"><code>POST /api/users/:_id/exercises</code></p>
         <select id="exercise-user-select" class="user-dropdown">
           <option value="">Select a user...</option>
         </select>
         <input id="desc" type="text" name="description" placeholder="description*" />
-        <input id="dur" type="text" name="duration" placeholder="duration* (mins.)" />
+        <input id="dur" type="number" name="duration" min="1" placeholder="duration* (mins.)" />
         <input id="date" type="date" name="date" />
         <input type="submit" value="Submit" />
       </form>
