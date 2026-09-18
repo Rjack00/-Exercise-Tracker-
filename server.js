@@ -1,51 +1,36 @@
-// ──────────────────────────────────────────────────────────────
-// CORE IMPORTS — Always present in every Express + Mongoose app
-// ──────────────────────────────────────────────────────────────
-const express = require('express')
-const app = express()
+
+const express = require('express');
+const app = express();
 
 app.disable('x-powered-by');
 
-const cors = require('cors')
-require('dotenv').config()
-const mongoose = require('mongoose')
-const User = require('./models/user')
+const cors = require('cors');
+require('dotenv').config();
+const mongoose = require('mongoose');
+const User = require('./models/user');
 
-// ──────────────────────────────────────────────────────────────
-// GLOBAL MIDDLEWARE — Almost always present
-// ──────────────────────────────────────────────────────────────
-app.use(cors())  // Enable CORS for all routes (required for browser-based tests)
+app.use(cors());  
+app.use(express.urlencoded({ extended: true}));
 
-// ────────────────────────────────────────────
-// Parse URL-encoded bodies (for form data)
-// This is essential for POST requests with form data
-// changes urlencoded data (username=john&description=running&duration=30) to js object
-app.use(express.urlencoded({ extended: true}))
-// ────────────────────────────────────────────
 
-app.use(express.json())  // Parse JSON bodies → req.body
+app.use(express.json());  
 
-app.use(express.static('public'))  // Serve static files (files in listed folder, i.e. CSS, JS, etc.)
+app.use(express.static('public'));
 
-// ──────────────────────────────────────────────────────────────
-// DATABASE CONNECTION — Standard in every Mongoose app
-// ──────────────────────────────────────────────────────────────
 // Startup validation
 if(!process.env.MONGO_URI) {
   console.error('MONGO_URI is missing in .env');
   process.exit(1);
 }
 
-mongoose.connect(process.env.MONGO_URI)  // Connect using URI from .env
+mongoose.connect(process.env.MONGO_URI) 
   .then(() => console.log('MongoDB connected'))
   .catch(err => {
     console.error('Database connection failed: ', err);
     process.exit(1);
   });
 
-// ──────────────────────────────────────────────────────────────
-// HELPER FUNCTIONS
-// ──────────────────────────────────────────────────────────────
+// Helper functions
 const parseLocalDate = (dateStr) => {
   const [year, month, day] = dateStr.split('-').map(Number);
   const date =  new Date(year, month -1, day);
@@ -59,20 +44,18 @@ const parseLocalDate = (dateStr) => {
   }
 
   return date;
-}
+};
 
-// ──────────────────────────────────────────────────────────────
 // ROUTES
-// ──────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html')  // Send the HTML form page
+  res.sendFile(__dirname + '/views/index.html')
 });
 
 
 // ──────────────────── Create & Post users ────────────────────
 
 app.post('/api/users', async (req, res) => {
-  const { username } = req.body;  // Form sends "username"
+  const { username } = req.body;
 
   if (!username || username.trim() === "") {
     return res.status(400).json({ error: 'Username is required' });
@@ -81,11 +64,11 @@ app.post('/api/users', async (req, res) => {
   const user = new User({ username });
 
   try {
-    const savedUser = await user.save();  // MongoDB generates _id automatically
+    const savedUser = await user.save();
     res.json({ username: savedUser.username, _id: savedUser._id });
   } catch (error) {
     
-    if (error.code === 11000) {   // Duplicate key/value (username)
+    if (error.code === 11000) {   // Duplicate key error
       return res.status(400).json({ error: 'Username already taken' });  
     }
 
@@ -116,9 +99,8 @@ app.get('/api/users', async (req, res) => {
 // ────────────────────── Add Exercise ──────────────────────
 
 app.post('/api/users/:_id/exercises', async (req, res) => {
-  // Extract data: _id, description, duration, date from URL or form using req.something
-  const { _id } = req.params;  // User ID from URL
-  const { description, duration, date } = req.body;  // Form fields
+  const { _id } = req.params;  
+  const { description, duration, date } = req.body; 
 
   if (!mongoose.Types.ObjectId.isValid(_id)) {
     return res.status(400).json({ error: "Invalid user ID" });
@@ -134,13 +116,11 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
   }
 
   try {
-    // Find the user by _id, if not found respond with an error message
     const user = await User.findById(_id);
     if(!user) {
       return res.status(404).json({ error: "User not found" });
-    };
+    }
 
-    // If date is supplied but it's invalid, reject it with a returned message error response
     const dateStr = req.body.date?.trim();
     let exerciseDate = new Date();
 
@@ -149,28 +129,26 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
       if(exerciseDate.toString() === "Invalid Date") {
         return res.status(400).json({ error: "Invalid date format"})
       }
-    };
+    }
 
-    // Build the exercise object (store real Date, not string)
+    // Store the exercise date as a Date object.
     const exercise = {
       description: description.trim(),
       duration: Number(duration),
       date: exerciseDate
     };
 
-    // Add the exercise to the user's log array
     user.log.push(exercise);
 
-    // Save the updated user back to MongoDB (don't forget the await)
     await user.save();
 
-    // Response: format date ONLY when sending
+    // Format the date only when sending the response.
     res.json({
       _id: user._id,
       username: user.username,
       description: exercise.description,
       duration: exercise.duration,
-      date: exerciseDate.toDateString()  // fCC requires this exact format
+      date: exerciseDate.toDateString()  // FCC required this format
     });
   
   } catch (error) {
@@ -180,7 +158,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     }
 
     res.status(500).json({ error: "Server error"})
-  };
+  }
 
 
 });
@@ -193,39 +171,39 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     return res.status(400).json({ error: 'Invalid user ID' })
   }
   
-  // Find the user; if not found return json
   try {
     const user = await User.findById(req.params._id);
     if(!user) return res.status(404).json({error: 'User not found'});
     // Make a copy of the log to avoid mutating the original
     let log = [...user.log];
 
-    // FROM filter - Handle ?to and ?from query parameters (yyyy-mm-dd)
+    // Filter by start date
     const fromStr = req.query.from?.trim();
-      if(fromStr) {
-        const from = parseLocalDate(fromStr);
 
-        if(from.toString() === 'Invalid Date') {
-          return res.status(400).json({ error: "Invalid from date" })
-        }
+    if(fromStr) {
+      const from = parseLocalDate(fromStr);
 
-        log = log.filter(exercise => exercise.date >= from);
-      };
+      if(from.toString() === 'Invalid Date') {
+        return res.status(400).json({ error: "Invalid from date" })
+      }
+
+      log = log.filter(exercise => exercise.date >= from);
+    }
 
     // TO filter — make it inclusive of the entire day
     const toStr = req.query.to?.trim();
-      if(toStr) {
-        const to = parseLocalDate(toStr);
-        
-        if(to.toString() === 'Invalid Date') {
-          return res.status(400).json({ error: "Invalid to date" })
-        }
 
-        to.setHours(23, 59, 59, 999);  // End of day
-        log = log.filter(exercise => exercise.date <= to);
-      };
+    if(toStr) {
+      const to = parseLocalDate(toStr);
+      
+      if(to.toString() === 'Invalid Date') {
+        return res.status(400).json({ error: "Invalid to date" })
+      }
 
-    // Handle ?limit
+      to.setHours(23, 59, 59, 999);  // End of day
+      log = log.filter(exercise => exercise.date <= to);
+    }
+
     const limit = req.query.limit;
     
     if (limit !== undefined) {
@@ -239,11 +217,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
 
     }
 
-    
-
-    
-
-    // Map response output & format date (fCC wants strings)
+    // Format dates for the API response.
     const formattedLog = log.map(ex => ({
       _id: ex._id,
       description: ex.description,
@@ -252,9 +226,6 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     }));
 
     
-    
-
-    // Final json response (user id, username, count of logs, log (formatted log))
     res.json({
       _id: user._id,
       username: user.username,
@@ -265,7 +236,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
     
-  };
+  }
   
 });
 
@@ -294,8 +265,6 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
 
     const exercise = user.log.id(exerciseId);
 
-
-    // UPDATE functionality ....
     const { description, duration, date } = req.body;
 
     if (
@@ -347,7 +316,7 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
 
     res.status(500).json({ error: 'Server error' });
   }
-})
+});
 
 // ────────────────────── DELETE EXERCISE ──────────────────────
 
@@ -386,18 +355,16 @@ app.delete('/api/exercises/:exerciseId', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }
-})
+});
 
 
-// 404 middleware (Route not found)
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
 
-// ──────────────────────────────────────────────────────────────
-// START SERVER — Always present
-// ──────────────────────────────────────────────────────────────
+// Start server
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log(`Server listening on port ${listener.address().port}`);
 });
