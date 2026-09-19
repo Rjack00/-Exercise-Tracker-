@@ -4,11 +4,11 @@ const logForm = document.getElementById('log-form');
 const exerciseUserSelect = document.getElementById('exercise-user-select');
 const logUserSelect = document.getElementById('log-user-select');
 const modal = document.getElementById("response-modal");
-const modalTitle = document.getElementById("modal-title");
-const modalContent = document.getElementById("modal-content");
-const modalJson = document.getElementById("modal-json");
-const modalJsonSection = document.querySelector("#response-modal details");
-const modalButtons = document.getElementById("modal-buttons");
+const modalTitle = document.getElementById('modal-title');
+const modalContent = document.getElementById('modal-content');
+const modalJson = document.getElementById('modal-json');
+const modalJsonSection = document.querySelector('#response-modal details');
+const modalButtons = document.getElementById('modal-buttons');
 let currentData = {
     log: []
 };
@@ -113,27 +113,25 @@ const deleteExerciseCardHTML = (exercise) => `
     <button class="confirm-delete-btn" data-id="${exercise._id}">Yes</button>
 `;
 
-
 const deleteExercise = async (exerciseId) => {
-        const response = await fetch(`/api/exercises/${exerciseId}`, {
-        method: "DELETE"
-        });
+    const response = await fetch(`/api/exercises/${exerciseId}`, {
+        method: 'DELETE'
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(data.error || "Delete failed");
-        }
+    if (!response.ok) {
+        throw new Error(data.error || "Delete failed");
+    }
 
-        return data;
+    return data;
 };
-
 
 const updateExercise = async (exerciseId, exerciseData) => {
         const response = await fetch(`/api/exercises/${exerciseId}`, {
-            method: "PUT",
+            method: 'PUT',
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(exerciseData)
         });
@@ -147,13 +145,12 @@ const updateExercise = async (exerciseId, exerciseData) => {
         return data;
 };
 
-
 function showModal({
     title,
     content,
     json = '',
     buttons = [
-        { text: "OK", value: "ok" }
+        { text: 'OK', value: 'ok' }
     ],
     showJson = true
 }) {
@@ -171,10 +168,10 @@ function showModal({
     modalButtons.innerHTML = '';
 
     buttons.forEach(buttonConfig => {
-        const btn = document.createElement("button");
+        const btn = document.createElement('button');
         btn.textContent = buttonConfig.text;
 
-        btn.addEventListener("click", () => {
+        btn.addEventListener('click', () => {
             modal.close(buttonConfig.value);
         });
 
@@ -184,12 +181,11 @@ function showModal({
     modal.showModal();
 
     return new Promise((resolve) => {
-        modal.addEventListener("close", () => {
+        modal.addEventListener('close', () => {
             resolve(modal.returnValue);
         }, { once: true });
     });
 }
-
 
 function showError(message) {
     return showModal({
@@ -198,7 +194,6 @@ function showError(message) {
         showJson: false
     });
 }
-
 
 const loadUsers = async () => {
     
@@ -233,121 +228,119 @@ const loadUsers = async () => {
     }
 };
 
+// ────────────────────── Modal delegated event click handling ──────────────────────
 
-// ────────────────────── DELEGATED CLICK EVENT HANDLING ──────────────────────
-
-
-modalContent.addEventListener("click", async (e) => {
+modalContent.addEventListener('click', async (e) => {
         
-        if (e.target.classList.contains("edit-btn")) {
-           
-            const clickedId = e.target.dataset.id;
-
-            const exercise = getExercise(clickedId);
-
-            const card = e.target.closest(".exercise-card");
-            card.innerHTML = editExerciseCardHTML(exercise);
-            return;
-        }
-
-        if (e.target.classList.contains("save-edit-btn")) {
-            const card = e.target.closest(".exercise-card");
-            const description = 
-                card.querySelector(".edit-description").value;
-            const duration = 
-                card.querySelector(".edit-duration").value;
-            const date = 
-                card.querySelector(".edit-date").value;
-            
-            const clickedId = e.target.dataset.id;
-
-            const exerciseData = {
-                description,
-                duration,
-                date
-            }
-
-            try {
-                const result = await updateExercise(clickedId, exerciseData);
-
-                const updatedExercise = result.exercise;
-
-                const exerciseIndex = currentData.log.findIndex(
-                    ex => ex._id === updatedExercise._id
-                );
-
-                if (exerciseIndex === -1) {
-                    throw new Error("Updated exercise not found.");
-                } 
-
-                currentData.log[exerciseIndex] = updatedExercise;
-
-                const card = e.target.closest(".exercise-card");
-
-                card.innerHTML = exerciseCardBodyHTML(updatedExercise);
-                
-                modalJson.textContent = JSON.stringify(currentData, null, 2);
-
-            } catch (error) {
-                await showError(error.message);
-            }
-
-            return;
-        }
-
-        if (e.target.classList.contains("cancel-edit-btn")) {
-
-            const clickedId = e.target.dataset.id;
-            const exercise = getExercise(clickedId);
-            const card = e.target.closest(".exercise-card");
-
-            card.innerHTML = exerciseCardBodyHTML(exercise);
-            return;
-        }
-
+    if (e.target.classList.contains("edit-btn")) {
         
-        if (e.target.classList.contains("delete-btn")) {
+        const clickedId = e.target.dataset.id;
 
-            const clickedId = e.target.dataset.id;
+        const exercise = getExercise(clickedId);
 
-            const exercise = getExercise(clickedId);
+        const card = e.target.closest(".exercise-card");
+        card.innerHTML = editExerciseCardHTML(exercise);
+        return;
+    }
+
+    if (e.target.classList.contains("save-edit-btn")) {
+        const card = e.target.closest(".exercise-card");
+        const description = 
+            card.querySelector(".edit-description").value;
+        const duration = 
+            card.querySelector(".edit-duration").value;
+        const date = 
+            card.querySelector(".edit-date").value;
+        
+        const clickedId = e.target.dataset.id;
+
+        const exerciseData = {
+            description,
+            duration,
+            date
+        };
+
+        try {
+            const result = await updateExercise(clickedId, exerciseData);
+
+            const updatedExercise = result.exercise;
+
+            const exerciseIndex = currentData.log.findIndex(
+                ex => ex._id === updatedExercise._id
+            );
+
+            if (exerciseIndex === -1) {
+                throw new Error("Updated exercise not found.");
+            } 
+
+            currentData.log[exerciseIndex] = updatedExercise;
 
             const card = e.target.closest(".exercise-card");
-            card.innerHTML = deleteExerciseCardHTML(exercise);
-            return;
-        }
 
-        if (e.target.classList.contains("confirm-delete-btn")) {
-            const clickedId = e.target.dataset.id;
-
-            try {
-                await deleteExercise(clickedId);
-
-                currentData.log = currentData.log.filter(ex => ex._id !== clickedId);
-                currentData.count = currentData.log.length;
-                
-                modalContent.innerHTML = exerciseLogHTML(currentData);
-                modalJson.textContent = JSON.stringify(currentData, null, 2);
-
-            } catch (error) {
-                await showError(error.message);
-            }
+            card.innerHTML = exerciseCardBodyHTML(updatedExercise);
             
-            return;
+            modalJson.textContent = JSON.stringify(currentData, null, 2);
+
+        } catch (error) {
+            await showError(error.message);
         }
 
-        if (e.target.classList.contains("cancel-delete-btn")) {
+        return;
+    }
+
+    if (e.target.classList.contains("cancel-edit-btn")) {
+
+        const clickedId = e.target.dataset.id;
+        const exercise = getExercise(clickedId);
+        const card = e.target.closest(".exercise-card");
+
+        card.innerHTML = exerciseCardBodyHTML(exercise);
+        return;
+    }
+
     
-            const clickedId = e.target.dataset.id;
-            const exercise = getExercise(clickedId);
-            const card = e.target.closest(".exercise-card");
+    if (e.target.classList.contains("delete-btn")) {
 
-            card.innerHTML = exerciseCardBodyHTML(exercise);
-            return;
+        const clickedId = e.target.dataset.id;
+
+        const exercise = getExercise(clickedId);
+
+        const card = e.target.closest(".exercise-card");
+        card.innerHTML = deleteExerciseCardHTML(exercise);
+        return;
+    }
+
+    if (e.target.classList.contains("confirm-delete-btn")) {
+        const clickedId = e.target.dataset.id;
+
+        try {
+            await deleteExercise(clickedId);
+
+            currentData.log = currentData.log.filter(ex => ex._id !== clickedId);
+            currentData.count = currentData.log.length;
+            
+            modalContent.innerHTML = exerciseLogHTML(currentData);
+            modalJson.textContent = JSON.stringify(currentData, null, 2);
+
+        } catch (error) {
+            await showError(error.message);
         }
-    });
+        
+        return;
+    }
 
-// ─────────────────── end delegated click event handling ──────────────────────
+    if (e.target.classList.contains("cancel-delete-btn")) {
+
+        const clickedId = e.target.dataset.id;
+        const exercise = getExercise(clickedId);
+        const card = e.target.closest(".exercise-card");
+
+        card.innerHTML = exerciseCardBodyHTML(exercise);
+        return;
+    }
+});
+
+// ─────────────────── Form submit handling ──────────────────────
 
 createUserForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -369,7 +362,7 @@ createUserForm.addEventListener('submit', async (e) => {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || 'Request failed');
+            throw new Error(data.error || "Request failed");
         }
 
         await loadUsers();
@@ -397,12 +390,11 @@ createUserForm.addEventListener('submit', async (e) => {
 
 });
 
-
-exerciseForm.addEventListener("submit", async (e) => {
+exerciseForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     if (!exerciseUserSelect.value) {
-        await showError('Please select a user.');
+        await showError("Please select a user.");
         return;
     }
 
@@ -428,7 +420,7 @@ exerciseForm.addEventListener("submit", async (e) => {
         const data = await response.json();
         
         if (!response.ok) {
-            throw new Error(data.error || 'Request failed');
+            throw new Error(data.error || "Request failed");
         }
 
         await showModal({
