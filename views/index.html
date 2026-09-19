@@ -14,17 +14,22 @@
       <form id="create-user-form" action="/api/users" method="post">
         <h2>Create a New User</h2>
         <p class="code"><code>POST /api/users</code></p>
-        <input id="uname" type="text" name="username" placeholder="username" />
+        <label for="uname">Username</label>
+        <input id="uname" type="text" name="username" placeholder="username" required/>
         <input type="submit" value="Submit" />
       </form>
       <form id="exercise-form">
-        <h2>Add exercises</h2>
+        <h2>Add exercise</h2>
         <p class="code"><code>POST /api/users/:_id/exercises</code></p>
+        <label for="exercise-user-select">User</label>
         <select id="exercise-user-select" class="user-dropdown">
           <option value="">Select a user...</option>
         </select>
-        <input id="desc" type="text" name="description" placeholder="description*" />
-        <input id="dur" type="number" name="duration" min="1" placeholder="duration* (mins.)" />
+        <label for="desc">Description</label>
+        <input id="desc" type="text" name="description" placeholder="description*" required/>
+        <label for="dur">Duration</label>
+        <input id="dur" type="number" name="duration" min="1" step="1" placeholder="duration* (mins.)" />
+        <label for="date">Date (optional)</label>
         <input id="date" type="date" name="date" />
         <input type="submit" value="Submit" />
       </form>
@@ -33,12 +38,16 @@
         <p class="code"><code>GET /api/users/:_id/logs?[from][&amp;to][&amp;limit]</code></p>
         <p class="optional-get-queries code"><strong>[ ]</strong> = optional</p>
         <p class="optional-get-queries code"><strong>from, to</strong> = dates (yyyy-mm-dd); <strong>limit</strong> = number</p>
+        <label for="log-user-select">User</label>
         <select id="log-user-select" class="user-dropdown">
           <option value="">Select a user...</option>
         </select>
+        <label for="log-from">From (optional)</label>
         <input id="log-from" type="date"/>
+        <label for="log-to">To (optional)</label>
         <input id="log-to" type="date"/>
-        <input id="log-limit" type="number" min="1" placeholder="Limit"/>
+        <label for="log-limit">Limit of how many to list (optional)</label>
+        <input id="log-limit" type="number" min="1" step="1" placeholder="Limit"/>
         <input type="submit" value="View Log" />
       </form>
     </div>
