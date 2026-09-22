@@ -4,28 +4,29 @@
 }
 
 body {
-  font-family:sans-serif;
-  margin: 25px;
+  font-family:Ariel, sans-serif;
+  margin:0;
+  padding: 40px 20px;
   color: #e2e2e2;
   background-color: #1f1f1f;
-  display: flex;
-  justify-content: center;
 }
 
 .container {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
   text-align: center;
 }
 
 h1 {
-  font-weight: bold;
-  margin-bottom: 25px;
+  margin-bottom: 35px;
+  font-size: 2.4rem;
+  font-weight: 700;
 }
 
 h2 {
-  margin-top: 5px;
+  margin: 0 0 12px;
+  font-size: 1.35rem;
 }
 
 p {
@@ -33,14 +34,14 @@ p {
 }
 
 form {
-  margin-bottom: 25px;
-  padding: 15px;
+  margin: 0 10px 30px;
+  padding: 24px;
   background-color: #000000;
-  display: inline-block;
   width: 100%;
   max-width: 340px;
-  border-radius: 15px;
+  border-radius: 12px;
   box-shadow: 0 0 9px rgb(247, 237, 149);
+  vertical-align: top;
 }
 
 .user-dropdown {
@@ -80,11 +81,12 @@ code {
 }
 
 .code {
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 .optional-get-queries {
   font-size: 0.8em;
+  line-height: 1.4;
 }
 
 dialog {
@@ -138,3 +140,18 @@ dialog[open] {
   margin-top: 0;
 }
 
+@media (max-width: 700px) {
+  body {
+    padding: 25px 15px;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 25px;
+  }
+  
+  form {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
