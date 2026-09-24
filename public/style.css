@@ -133,7 +133,35 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
+.delete-btn,
+.confirm-delete-btn {
+  background-color: #8f2d2d;
+  border-color: #a94444;
+}
 
+.delete-btn:hover,
+.confirm-delete-btn:hover {
+  background-color: #b63b3b;
+}
+
+.save-edit-btn {
+  background-color: #286b45;
+  border-color: #37845a;
+}
+
+.save-edit-btn:hover {
+  background-color: #338456;
+}
+
+.cancel-edit-btn,
+.cancel-delete-btn {
+  background-color: #444;
+}
+
+.cancel-edit-btn:hover,
+.cancel-delete-btn:hover {
+  background-color: #555;
+}
 
 
 
