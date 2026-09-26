@@ -27,10 +27,12 @@ const exerciseAddedHTML = (data) => `
 
 const exerciseCardBodyHTML = (exercise) => `
     <h4>${exercise.description}</h4>
-            <p>Duration: ${exercise.duration}</p>
-            <p>Date: ${exercise.date}</p>
-            <button class="delete-btn" data-id="${exercise._id}">Delete</button>
-            <button class="edit-btn" data-id="${exercise._id}">Edit</button>
+    <p>Duration: ${exercise.duration}</p>
+    <p>Date: ${exercise.date}</p>
+    <div class="exercise-btn-container">
+        <button class="edit-btn" data-id="${exercise._id}">Edit</button>
+        <button class="delete-btn" data-id="${exercise._id}">Delete</button>
+    </div>
 `;
 
 const exerciseCardHTML = (exercise) => `
