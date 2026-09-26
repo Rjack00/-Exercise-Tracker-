@@ -182,31 +182,58 @@ code {
 }
 
 dialog {
-    border: none;
-    border-radius: 12px;
+  width: min(90%, 600px);
+  max-height: 85vh;
+  padding: 24px;
+  border: 1px solid #555;
+  border-radius: 12px;
+  background-color: #1f1f1f;
+  color: #e2e2e2;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 dialog::backdrop {
-    background: rgba(0,0,0,.6);
+  background: rgba(0, 0, 0, 0.7);
 }
 
 dialog[open] {
-    animation: fadeIn .2s;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#modal-title {
+  margin-bottom: 18px;
+  font-size: 1.4rem;
 }
 
 .modal-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
 }
 
 
-#response-output-json, #response-output-ux {
+/* #response-output-json, 
+#response-output-ux {
   padding: 1rem;
-  border: 1px solid white;
+  border: 1px solid #444;
   border-radius: 8px;
   overflow-x: auto;
-}
+  background-color: #2b2b2b;
+} */
 
 .ux-response-head {
   display: flex;
@@ -218,18 +245,19 @@ dialog[open] {
 .exercise-card {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
   border: 1px solid #444;
   border-radius: 8px;
-  padding: 10px;
+  padding: 16px;
   margin: 10px 0;
   background-color: #2b2b2b;
   text-align: left;
-  color: rgb(238, 236, 236);
+  color: #eee;
 }
 
 .exercise-card h4 {
-  margin-top: 0;
+  margin: 0 0 4px;
+  font-size: 1.05rem;
 }
 
 @media (max-width: 700px) {
@@ -245,5 +273,10 @@ dialog[open] {
   form {
     margin-right: 0;
     margin-left: 0;
+  }
+
+  dialog {
+    width: calc(100% - 30px);
+    padding: 18px;
   }
 }
