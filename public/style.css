@@ -27,7 +27,7 @@ h1 {
 }
 
 h2 {
-  margin: 0 0 12px;
+  margin: 0 0 20px;
   font-size: 1.35rem;
 }
 
@@ -50,8 +50,8 @@ form label {
   display: block;
   margin-bottom: 5px;
   text-align: left;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 400;
 }
 
 .user-dropdown {
@@ -64,6 +64,19 @@ form label {
   color: #222;
   font-size: 1rem;
   cursor: pointer;
+}
+
+code {
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #ff8800e0;
+  padding: 2px;
+  overflow-wrap: anywhere;
+}
+
+.optional-get-queries {
+  font-size: 0.8em;
+  line-height: 1.4;
 }
 
 input {
@@ -85,7 +98,7 @@ input[type="submit"] {
   padding: 10px 16px;
   border: none;
   border-radius: 6px;
-  background-color: #db6300;
+  background-color: #db5000;
   color: #fff;
   font-size: 1rem;
   font-weight: 600;
@@ -94,7 +107,7 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-  background-color: #ff7300;
+  background-color: #ff7300e4;
 }
 
 input[type="submit"]:active {
@@ -105,79 +118,6 @@ input:focus,
 select:focus {
   outline: 2px solid #ff8800;
   outline-offset: 1px;
-}
-
-
-
-button {
-  display: inline-block;
-  padding: 8px 14px;
-  border: 1px solid #777;
-  border-radius: 6px;
-  background-color: #444;
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.1s ease;
-}
-
-button:hover {
-  background-color: #555;
-}
-
-button:active {
-  transform: translateY(1px);
-}
-
-button:focus-visible {
-  outline: 2px solid #ff8800;
-  outline-offset: 2px;
-}
-
-.delete-btn,
-.confirm-delete-btn {
-  background-color: #8f2d2d;
-  border-color: #a94444;
-}
-
-.delete-btn:hover,
-.confirm-delete-btn:hover {
-  background-color: #b63b3b;
-}
-
-.save-edit-btn {
-  background-color: #286b45;
-  border-color: #37845a;
-}
-
-.save-edit-btn:hover {
-  background-color: #338456;
-}
-
-.cancel-edit-btn,
-.cancel-delete-btn {
-  background-color: #444;
-}
-
-.cancel-edit-btn:hover,
-.cancel-delete-btn:hover {
-  background-color: #555;
-}
-
-
-
-code {
-  font-family: monospace;
-  font-size: 0.9em;
-  color: #ff8800e0;
-  padding: 2px;
-  overflow-wrap: anywhere;
-}
-
-.optional-get-queries {
-  font-size: 0.8em;
-  line-height: 1.4;
 }
 
 dialog {
@@ -238,7 +178,6 @@ dialog[open] {
   display: flex;
   flex-direction: column;
   gap: 10px;
-
 }
 
 .exercise-card {
@@ -259,6 +198,120 @@ dialog[open] {
   font-size: 1.05rem;
 }
 
+.exercise-card p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.exercise-card input {
+  margin-bottom: 8px;
+}
+
+.exercise-card label {
+  margin-top: 4px;
+}
+
+button {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid #777;
+  border-radius: 6px;
+  background-color: #444;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background-color: #555;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button:focus-visible {
+  outline: 2px solid #ff8800;
+  outline-offset: 2px;
+}
+
+button:disabled,
+input[type="submit"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.exercise-btn-container {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.delete-btn,
+.confirm-delete-btn {
+  background-color: #8f2d2d;
+  border-color: #a94444;
+}
+
+.delete-btn:hover,
+.confirm-delete-btn:hover {
+  background-color: #b63b3b;
+}
+
+.save-edit-btn {
+  background-color: #286b45;
+  border-color: #37845a;
+}
+
+.save-edit-btn:hover {
+  background-color: #338456;
+}
+
+.cancel-edit-btn,
+.cancel-delete-btn {
+  background-color: #444;
+}
+
+.cancel-edit-btn:hover,
+.cancel-delete-btn:hover {
+  background-color: #555;
+}
+
+
+details {
+  margin-top: 16px;
+  text-align: left;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 6px 0;
+}
+
+summary:hover {
+  color: #ff8800;
+}
+
+#modal-json {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background-color: #111;
+  color: #ddd;
+  overflow-x: auto;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+
+
+
 @media (max-width: 700px) {
   body {
     padding: 25px 15px;
@@ -277,5 +330,15 @@ dialog[open] {
   dialog {
     width: calc(100% - 30px);
     padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
   }
 }
