@@ -13,16 +13,16 @@
       <h1>Exercise Tracker</h1>
       <form id="create-user-form" action="/api/users" method="post">
         <h2>Create a New User</h2>
-        <p class="code"><code>POST /api/users</code></p>
+        <!-- <p class="code"><code>POST /api/users</code></p> -->
         <label for="uname">Username</label>
         <input id="uname" type="text" name="username" placeholder="username" required/>
         <input type="submit" value="Submit" />
       </form>
       <form id="exercise-form">
         <h2>Add exercise</h2>
-        <p class="code"><code>POST /api/users/:_id/exercises</code></p>
+        <!-- <p class="code"><code>POST /api/users/:_id/exercises</code></p> -->
         <label for="exercise-user-select">User</label>
-        <select id="exercise-user-select" class="user-dropdown">
+        <select id="exercise-user-select" class="user-dropdown" required>
           <option value="">Select a user...</option>
         </select>
         <label for="desc">Description</label>
@@ -35,11 +35,11 @@
       </form>
       <form id="log-form">
         <h2>View Exercise Log</h2>
-        <p class="code"><code>GET /api/users/:_id/logs?[from][&amp;to][&amp;limit]</code></p>
-        <p class="optional-get-queries code"><strong>[ ]</strong> = optional</p>
-        <p class="optional-get-queries code"><strong>from, to</strong> = dates (yyyy-mm-dd); <strong>limit</strong> = number</p>
+        <!-- <p class="code"><code>GET /api/users/:_id/logs?[from][&amp;to][&amp;limit]</code></p> -->
+        <!-- <p class="optional-get-queries code"><strong>[ ]</strong> = optional</p> -->
+        <!-- <p class="optional-get-queries code"><strong>from, to</strong> = dates (yyyy-mm-dd); <strong>limit</strong> = number</p> -->
         <label for="log-user-select">User</label>
-        <select id="log-user-select" class="user-dropdown">
+        <select id="log-user-select" class="user-dropdown" required>
           <option value="">Select a user...</option>
         </select>
         <label for="log-from">From (optional)</label>
