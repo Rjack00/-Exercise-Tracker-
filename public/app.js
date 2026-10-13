@@ -91,18 +91,19 @@ const editExerciseCardHTML = (exercise) => {
             class="edit-date"
             type="date"
             value="${formattedDate}">
-
-        <button
-            class="cancel-edit-btn"
-            data-id="${exercise._id}">
-            Cancel
-        </button>
-        
-        <button
-            class="save-edit-btn"
-            data-id="${exercise._id}">
-            Save
-        </button>
+        <div class="exercise-btn-container">
+            <button
+                class="cancel-edit-btn"
+                data-id="${exercise._id}">
+                Cancel
+            </button>
+            
+            <button
+                class="save-edit-btn"
+                data-id="${exercise._id}">
+                Save
+            </button>
+        </div>
     `;
 };
 
@@ -110,9 +111,11 @@ const deleteExerciseCardHTML = (exercise) => `
     <h4>${exercise.description}</h4>
     <p>Duration: ${exercise.duration}</p>
     <p>Date: ${exercise.date}</p>
-    <p><strong>Delete this exercise?</strong></p>
-    <button class="cancel-delete-btn" data-id="${exercise._id}">Cancel</button>
-    <button class="confirm-delete-btn" data-id="${exercise._id}">Yes</button>
+    <p id="confirm-delete-message"><strong>Delete this exercise?</strong></p>
+    <div class="exercise-btn-container">
+        <button class="cancel-delete-btn" data-id="${exercise._id}">Cancel</button>
+        <button class="confirm-delete-btn" data-id="${exercise._id}">Yes</button>
+    </div>
 `;
 
 const deleteExercise = async (exerciseId) => {

@@ -21,9 +21,10 @@ body {
 }
 
 h1 {
-  margin-bottom: 35px;
+  margin-bottom:20px;
   font-size: 2.4rem;
   font-weight: 700;
+  text-align: center;
 }
 
 h2 {
@@ -33,6 +34,14 @@ h2 {
 
 p {
   max-width: 900px;
+}
+
+#intro {
+  text-align: center;
+  font-size: 0.8rem;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 10px 25px;
 }
 
 form {
@@ -114,8 +123,8 @@ input[type="submit"]:active {
   transform: translateY(1px);
 }
 
-input:focus,
-select:focus {
+input:focus-visible,
+select:focus-visible {
   outline: 2px solid #ff8800;
   outline-offset: 1px;
 }
@@ -164,20 +173,11 @@ dialog[open] {
   flex-wrap: wrap;
 }
 
-
-/* #response-output-json, 
-#response-output-ux {
-  padding: 1rem;
-  border: 1px solid #444;
-  border-radius: 8px;
-  overflow-x: auto;
-  background-color: #2b2b2b;
-} */
-
 .ux-response-head {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-bottom: 20px;
 }
 
 .exercise-card {
@@ -237,16 +237,10 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-button:disabled,
-input[type="submit"]:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .exercise-btn-container {
   display: flex;
   gap: 8px;
-  margin-top: 6px;
+  margin-top: 10px;
   flex-wrap: wrap;
 }
 
@@ -259,6 +253,13 @@ input[type="submit"]:disabled {
 .delete-btn:hover,
 .confirm-delete-btn:hover {
   background-color: #b63b3b;
+}
+
+#confirm-delete-message {
+  border: 2px solid #ff8800;
+  padding: 3px;
+  margin-top: 5px;
+  text-align: center;
 }
 
 .save-edit-btn {
@@ -319,7 +320,7 @@ summary:hover {
 
   h1 {
     font-size: 2rem;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
   }
   
   form {
