@@ -11,24 +11,25 @@
   <body>
     <div class="container">
       <h1>Exercise Tracker</h1>
+      <p id="intro">Create user profiles, record exercises, and view, filter, edit, or delete exercise logs in one place.</p>
       <form id="create-user-form" action="/api/users" method="post">
         <h2>Create a New User</h2>
         <!-- <p class="code"><code>POST /api/users</code></p> -->
         <label for="uname">Username</label>
-        <input id="uname" type="text" name="username" placeholder="username" required/>
+        <input id="uname" type="text" name="username" placeholder="Enter username" maxlength="30" required/>
         <input type="submit" value="Submit" />
       </form>
       <form id="exercise-form">
-        <h2>Add exercise</h2>
+        <h2>Add Exercise</h2>
         <!-- <p class="code"><code>POST /api/users/:_id/exercises</code></p> -->
         <label for="exercise-user-select">User</label>
         <select id="exercise-user-select" class="user-dropdown" required>
           <option value="">Select a user...</option>
         </select>
         <label for="desc">Description</label>
-        <input id="desc" type="text" name="description" placeholder="description*" required/>
+        <input id="desc" type="text" name="description" placeholder="Enter exercise description" maxlength="100" required/>
         <label for="dur">Duration</label>
-        <input id="dur" type="number" name="duration" min="1" step="1" placeholder="duration* (mins.)" />
+        <input id="dur" type="number" name="duration" min="1" step="1" placeholder="Duration in minutes" required />
         <label for="date">Date (optional)</label>
         <input id="date" type="date" name="date" />
         <input type="submit" value="Submit" />
