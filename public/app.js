@@ -80,12 +80,17 @@ const editExerciseCardHTML = (exercise) => {
         <input
             class="edit-description"
             type="text"
-            value="${exercise.description}">
+            maxlength="100"
+            value="${exercise.description}"
+            required >
         <label>Duration</label>
         <input
             class="edit-duration"
             type="number"
-            value="${exercise.duration}">
+            min="1"
+            step="1"
+            value="${exercise.duration}"
+            required >
         <label>Date</label>
         <input
             class="edit-date"
