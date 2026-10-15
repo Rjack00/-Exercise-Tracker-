@@ -111,8 +111,8 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     return res.status(400).json({ error: "Description and Duration are both required" });
   }
 
-  if(isNaN(duration) || duration <= 0) {
-    return res.status(400).json({ error: "Duration must be a positive number" });
+  if(!Number.isInteger(Number(duration)) || Number(duration) <= 0) {
+    return res.status(400).json({ error: "Duration must be a positive whole number" });
   }
 
   try {
@@ -278,9 +278,9 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
       });
     }
 
-    if (isNaN(duration) || Number(duration) <= 0) {
+    if (!Number.isInteger(Number(duration)) || Number(duration) <= 0) {
       return res.status(400).json({
-        error: "Duration must be a positive number"
+        error: "Duration must be a positive whole number"
       });
     }
 
