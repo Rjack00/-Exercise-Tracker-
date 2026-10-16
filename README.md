@@ -1,6 +1,6 @@
 # Exercise Tracker
 
-A REST API that lets users create profiles and log workout exercises. Built as part of [freeCodeCamp's Back End Development certification](https://www.freecodecamp.org/learn/back-end-development-and-apis/).
+A full-stack exercise tracking application built with Node.js, Express, MongoDB, and vanilla JavaScript. Users can create profiles, record exercises, and view, filter, edit, and delete exercise logs through a responsive web interface.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-View-00b4ff)](https://exercise-tracker-8ly3.onrender.com)
 
@@ -112,3 +112,7 @@ API endpoints were tested using:
 - Browser forms
 - Direct browser GET requests
 - MongoDB Atlas document verification
+
+## Project Background 
+
+This project began as a [freeCodeCamp Back End Development and APIs](https://www.freecodecamp.org/learn/back-end-development-and-apis/) exercise tracker project. It was expanded with additional API functionality, input validation, error handling, and a frontend interface to create a more complete portfolio project.
