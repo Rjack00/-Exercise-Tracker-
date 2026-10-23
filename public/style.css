@@ -4,11 +4,15 @@
 }
 
 body {
+  background-color: #1f1f1f80;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.80)), url('/images/gym-sunrise.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   font-family:Ariel, sans-serif;
   margin:0;
   padding: 40px 20px;
   color: #e2e2e2;
-  background-color: #1f1f1f;
 }
 
 .container {
@@ -47,7 +51,7 @@ p {
 form {
   margin: 0 10px 30px;
   padding: 24px;
-  background-color: #000000;
+  background-color: #00000050;
   width: 100%;
   max-width: 340px;
   border-radius: 12px;
