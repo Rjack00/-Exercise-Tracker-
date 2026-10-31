@@ -5,7 +5,7 @@
 
 body {
   background-color: #1f1f1f;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.70), rgba(0, 0, 0, 0.70)), url('/images/gym-sunrise.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.50)), url('/images/futureGym.avif');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -80,7 +80,7 @@ form label {
   width: 100%;
   padding: 10px 12px;
   border-radius: 6px;
-  background-color: #e9e9e9;
+  background-color: #e9e9e9db;
   color: #222;
   font-size: 1rem;
   cursor: pointer;
@@ -105,7 +105,7 @@ input {
   padding: 10px 12px;
   width: 100%;
   border: 1px solid #777;
-  background-color: #e9e9e9;
+  background-color: #e9e9e9db;
   border-radius: 6px;
   color: #222;
   font-size: 1rem;
