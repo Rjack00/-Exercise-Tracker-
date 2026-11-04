@@ -326,7 +326,7 @@ summary:hover {
 
 
 
-@media (max-width: 700px) {
+@media (max-width: 1033px) {
   body {
     padding: 25px 15px;
     background-image: linear-gradient(rgba(0, 0, 0, 0.40), rgba(0, 0, 0, 0.40)), url('/images/gymEquipment.avif');
@@ -338,6 +338,7 @@ summary:hover {
   }
 
   .container-2 {
+    flex-direction: column;
     gap: 0;
   }
   
