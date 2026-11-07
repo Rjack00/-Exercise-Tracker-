@@ -15,19 +15,33 @@ let currentData = {
 
 // ───────────────── HELPER FUNCTIONS ──────────────────────
 
+const escapeHTML = (str) => {
+    return String(str).replace(/[&<>"']/g, char => {
+        const entities = {
+            '&': '&amp',
+            '<': '&alt',
+            '>': '&gt',
+            '"': '&quot',
+            "'": '&#39'
+        }
+
+        return entities[char];
+    })
+}
+
 const exerciseAddedHTML = (data) => `
     <div class="exercise-card">
         <h3>Exercise Added</h3>
-        <p><strong>User:</strong> ${data.username}</p>
-        <p><strong>Exercise:</strong> ${data.description}</p>
+        <p><strong>User:</strong> ${escapeHTML(data.username)}</p>
+        <p><strong>Exercise:</strong> ${escapeHTML(data.description)}</p>
         <p><strong>Duration:</strong> ${data.duration} min</p>
         <p><strong>Date:</strong> ${data.date}</p>
     </div>
 `;
 
 const exerciseCardBodyHTML = (exercise) => `
-    <h4>${exercise.description}</h4>
-    <p>Duration: ${exercise.duration}</p>
+    <h4>${escapeHTML(escapeHTML(exercise.description))}</h4>
+    <p>Duration: ${escapeHTML(exercise.duration)}</p>
     <p>Date: ${exercise.date}</p>
     <div class="exercise-btn-container">
         <button class="edit-btn" data-id="${exercise._id}">Edit</button>
@@ -44,7 +58,7 @@ const exerciseCardHTML = (exercise) => `
 const exerciseLogHTML = (data) => {
     let html = `
         <div class="ux-response-head">
-            <h3>${data.username}</h3>
+            <h3>${escapeHTML(data.username)}</h3>
             <p>ID: ${data._id}</p>
             ${
                 data.count > 0 
@@ -81,7 +95,7 @@ const editExerciseCardHTML = (exercise) => {
             class="edit-description"
             type="text"
             maxlength="100"
-            value="${exercise.description}"
+            value="${escapeHTML(exercise.description)}"
             required >
         <label>Duration</label>
         <input
@@ -113,7 +127,7 @@ const editExerciseCardHTML = (exercise) => {
 };
 
 const deleteExerciseCardHTML = (exercise) => `
-    <h4>${exercise.description}</h4>
+    <h4>${escapeHTML(exercise.description)}</h4>
     <p>Duration: ${exercise.duration}</p>
     <p>Date: ${exercise.date}</p>
     <p id="confirm-delete-message"><strong>Delete this exercise?</strong></p>
@@ -385,7 +399,7 @@ createUserForm.addEventListener('submit', async (e) => {
             title: "User Created",
             content: `
             <div class="ux-response-head">
-                <p>New user "${data.username}" created successfully!</p>
+                <p>New user "${escapeHTML(data.username)}" created successfully!</p>
             </div>
             `,
             json: data
