@@ -14,7 +14,6 @@
       <p id="intro">Create user profiles, record exercises, and view, filter, edit, or delete exercise logs in one place.</p>
       <form id="create-user-form" action="/api/users" method="post">
         <h2>Create a New User</h2>
-        <!-- <p class="code"><code>POST /api/users</code></p> -->
         <label for="uname">Username</label>
         <input id="uname" type="text" name="username" placeholder="Enter username" maxlength="30" required/>
         <input type="submit" value="Submit" />
@@ -22,7 +21,6 @@
       <div class="container container-2">
         <form id="exercise-form">
           <h2>Add Exercise</h2>
-          <!-- <p class="code"><code>POST /api/users/:_id/exercises</code></p> -->
           <label for="exercise-user-select">User</label>
           <select id="exercise-user-select" class="user-dropdown" required>
             <option value="">Select a user...</option>
@@ -37,9 +35,6 @@
         </form>
         <form id="log-form">
           <h2>View Exercise Log</h2>
-          <!-- <p class="code"><code>GET /api/users/:_id/logs?[from][&amp;to][&amp;limit]</code></p> -->
-          <!-- <p class="optional-get-queries code"><strong>[ ]</strong> = optional</p> -->
-          <!-- <p class="optional-get-queries code"><strong>from, to</strong> = dates (yyyy-mm-dd); <strong>limit</strong> = number</p> -->
           <label for="log-user-select">User</label>
           <select id="log-user-select" class="user-dropdown" required>
             <option value="">Select a user...</option>
