@@ -209,7 +209,7 @@ app.get('/api/users/:_id/logs', async (req, res) => {
     if (limit !== undefined) {
       const limitNumber = Number(limit);
 
-      if(isNaN(limitNumber) || limitNumber < 1) {
+      if(!Number.isInteger(limitNumber) || limitNumber < 1) {
       return res.status(400).json({ error: "Invalid limit" });
     }
 
