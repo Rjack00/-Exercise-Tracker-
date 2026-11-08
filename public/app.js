@@ -18,11 +18,11 @@ let currentData = {
 const escapeHTML = (str) => {
     return String(str).replace(/[&<>"']/g, char => {
         const entities = {
-            '&': '&amp',
-            '<': '&alt',
-            '>': '&gt',
-            '"': '&quot',
-            "'": '&#39'
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
         }
 
         return entities[char];
@@ -40,7 +40,7 @@ const exerciseAddedHTML = (data) => `
 `;
 
 const exerciseCardBodyHTML = (exercise) => `
-    <h4>${escapeHTML(escapeHTML(exercise.description))}</h4>
+    <h4>${escapeHTML(exercise.description)}</h4>
     <p>Duration: ${escapeHTML(exercise.duration)}</p>
     <p>Date: ${exercise.date}</p>
     <div class="exercise-btn-container">
