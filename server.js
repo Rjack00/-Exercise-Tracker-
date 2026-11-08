@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
 app.post('/api/users', async (req, res) => {
   const { username } = req.body;
 
-  if (!username || username.trim() === "") {
+  if (typeof username !== 'string' || username.trim() === "") {
     return res.status(400).json({ error: 'Username is required' });
   }
 
@@ -107,7 +107,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
   }
 
   // Validate required fields before DB calls
-  if(!description || description.trim() === "" || duration === undefined) {
+  if(typeof description !== 'string' || description.trim() === "" || duration === undefined) {
     return res.status(400).json({ error: "Description and Duration are both required" });
   }
 
@@ -268,7 +268,7 @@ app.put('/api/exercises/:exerciseId', async (req, res) => {
     const { description, duration, date } = req.body;
 
     if (
-      !description || 
+      typeof description !== 'string' || 
       description.trim() === "" ||
       duration === undefined || 
       !date
