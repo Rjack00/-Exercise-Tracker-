@@ -93,7 +93,7 @@ The API validates incoming data before saving changes.
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/Rjack00/-exercise-tracker-.git
+   git clone https://github.com/Rjack00/-exercise-tracker-.git exercise-tracker
    ```
 
 2. Navigate into the project directory:
