@@ -4,6 +4,14 @@ A full-stack exercise tracking application built with Node.js, Express, MongoDB,
 
 **[Live Demo](https://exercise-tracker-8ly3.onrender.com)** · **[GitHub Repository](https://github.com/Rjack00/-exercise-tracker-)**
 
+## Screenshots
+
+### Main Interface
+![Exercise Tracker main interface](screenshots/main-interface.png)
+
+### Exercise Log
+![Exercise log displaying logged exercises](screenshots/exercise-log.png)
+
 ## Features
 
 - Create user profiles with unique usernames.
