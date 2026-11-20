@@ -23,13 +23,6 @@ if(!process.env.MONGO_URI) {
   process.exit(1);
 }
 
-mongoose.connect(process.env.MONGO_URI) 
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => {
-    console.error('Database connection failed: ', err);
-    process.exit(1);
-  });
-
 // Helper functions
 const parseLocalDate = (dateStr) => {
   const [year, month, day] = dateStr.split('-').map(Number);
@@ -363,9 +356,20 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
+// Start server after successful database connection
+const startServer = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('MongoDB connected');
 
-// Start server
-const listener = app.listen(process.env.PORT || 3000, () => {
-  console.log(`Server listening on port ${listener.address().port}`);
-});
+    const listener = app.listen(process.env.PORT || 3000, () => {
+      console.log(`Server listening on port ${listener.address().port}`);
+    });
 
+  } catch (error) {
+    console.error('Database connection failed: ', error);
+    process.exit(1);
+  }
+};
+
+startServer();
