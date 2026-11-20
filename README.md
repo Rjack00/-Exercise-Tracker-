@@ -152,4 +152,4 @@ The application was tested through the browser interface and Postman, including:
 
 ## Project Background
 
-This project began as a [freeCodeCamp Back End Development and APIs](https://www.freecodecamp.org/learn/back-end-development-and-apis/) exercise tracker project. It was expanded with additional API functionality, input validation, error handling, and a frontend interface to create a more complete and functional application.
+This project began as a [freeCodeCamp](https://www.freecodecamp.org/learn/back-end-development-and-apis/) project and was expanded to include a frontend interface, input validation, error handling, MongoDB database integration, and additional API functionality. The application was then deployed using Render. 
